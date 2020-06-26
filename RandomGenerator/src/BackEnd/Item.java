@@ -5,8 +5,6 @@ import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 
-import static FrontEnd.InterfaceManager.setSize;
-
 /*
 Fields
 - Keeps a reference to its parent csvData object.
@@ -38,8 +36,8 @@ public class Item {
         this.csvData = csvData;
         //Display Section
         this.itemButton = new Button();
-        itemButton.setMinSize(setSize("Gen").width,20);
-        itemButton.setMaxSize(setSize("Gen").width,20);
+        itemButton.setMinSize(100,20);
+        itemButton.setMaxSize(100,20);
     }
 
     ///Getters and Setters

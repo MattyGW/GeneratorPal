@@ -12,8 +12,6 @@ import javafx.scene.paint.Color;
 
 import java.util.*;
 
-import static FrontEnd.InterfaceManager.setSize;
-
 public class Generator {
     //References
     AssetManager        assetManager;
@@ -24,28 +22,29 @@ public class Generator {
     VBox                scrollPaneBody;
     //Data tracked by Generator
     String                      name;
-    HashMap<String,CSVData>     selectedCSVDatas;
-    HashMap<String,List<Object>> selectedCategories; //The list will be <Category, Integer>
+    Integer                     count;
+    Integer                     passCounter;
+    HashMap<String,Object>      selectedCSVDatas;
+    HashMap<String,Object>      selectedCategories;
+    HashMap<String,Integer>     recordedCategoriesWeights;
+    HashMap<String,Item>        displayedItems;
 
-    //Constructor
+    //Constructor (Needs Checking)
     public Generator(){}
     public Generator(InterfaceManager interfaceManager, String name, Primary stagePrimary) throws Exception {
         this.interfaceManager = interfaceManager;
         this.name = name;
-        this.selectedCategories = new HashMap<>();
-        this.selectedCSVDatas = new HashMap<>();
+        this.count = 1;
+        this.passCounter = 0;
+        this.selectedCSVDatas = new HashMap<String,Object>();
+        this.recordedCategoriesWeights = new HashMap<String,Integer>();
+        this.selectedCategories = new HashMap<String,Object>();
+        this.displayedItems = new HashMap<String,Item>();
         this.stagePrimary = stagePrimary;
-        VBox mainBody = new VBox();
-        this.mainBody = mainBody;
 
         //mainBody Settings
-        mainBody.setSpacing(0);
-        mainBody.setPadding(new Insets(1, 1, 1, 1));
-        mainBody.setBackground(new Background(new BackgroundFill(
-                Color.rgb(0, 0, 0),
-                CornerRadii.EMPTY, Insets.EMPTY)));
-        mainBody.setMaxSize(setSize("Gen").width, setSize("Max").height);
-        mainBody.setPrefSize(setSize("Gen").width, setSize("Pref").height);
+        this.mainBody = new VBox();
+        interfaceManager.formatMainBody(mainBody);
         VBox.setVgrow(mainBody, Priority.ALWAYS);
 
         //title Settings
@@ -55,48 +54,59 @@ public class Generator {
                 Color.rgb(245, 245, 245),
                 CornerRadii.EMPTY, Insets.EMPTY)));
         mainBody.getChildren().add(title);
-        title.setMaxSize(setSize("Gen").width-2, 20);
-        title.setMinSize(setSize("Gen").width-2, 20);
+        title.setPrefSize(248, 20);
 
         //menuBar Settings
         MenuBar menuBar = new MenuBar();
-        Menu OptionsMenu = new Menu("Options");
-        MenuItem csvChangeItem = new MenuItem("Change CSVs");
-        MenuItem categoriesChangeItem = new MenuItem("Change Categories");
-        MenuItem generateItem = new MenuItem("Generate");
-        MenuItem categoryWeightsItem = new MenuItem("Category Weights");
-        Menu CSVsMenu = new Menu("CSVs");
-        Menu CategoriesMenu = new Menu("Categories");
-        menuBar.getMenus().add(OptionsMenu);
-        OptionsMenu.getItems().add(csvChangeItem);
-        OptionsMenu.getItems().add(categoriesChangeItem);
-        OptionsMenu.getItems().add(generateItem);
-        OptionsMenu.getItems().add(categoryWeightsItem);
-        menuBar.getMenus().add(CSVsMenu);
-        menuBar.getMenus().add(CategoriesMenu);
 
-        csvChangeItem.setOnAction(e -> {
-            try {
-                changeCSVs();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-        categoriesChangeItem.setOnAction(e -> {
-            try {
-                changeCatagories();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+        Menu OptionsMenu = new Menu("Options");
+        menuBar.getMenus().add(OptionsMenu);
+        MenuItem generateItem = new MenuItem("Generate");
+        OptionsMenu.getItems().add(generateItem);
         generateItem.setOnAction(e -> {
             try {
-                generate();
+                setupAndCallGeneratorWeightedItem(count);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-        categoryWeightsItem.setOnAction(e -> {
+
+        MenuItem generateAmountItem = new MenuItem("Edit Amount Generated");
+        OptionsMenu.getItems().add(generateAmountItem);
+        generateAmountItem.setOnAction(e -> {
+            try {
+                changeCount();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        Menu CSVsMenu = new Menu("CSVs");
+        menuBar.getMenus().add(CSVsMenu);
+        MenuItem csvSelectItem = new MenuItem("Edit Selected CSVs");
+        CSVsMenu.getItems().add(csvSelectItem);
+        csvSelectItem.setOnAction(e -> {
+            try {
+                selectCSVs();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        Menu CategoriesMenu = new Menu("Edit Categories");
+        menuBar.getMenus().add(CategoriesMenu);
+        MenuItem categorySelectItem = new MenuItem("Edit Selected Categories");
+        CategoriesMenu.getItems().add(categorySelectItem);
+        categorySelectItem.setOnAction(e -> {
+            try {
+                selectCategories();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        MenuItem categoryWeightItem = new MenuItem("Edit Category Weights");
+        CategoriesMenu.getItems().add(categoryWeightItem);
+        categoryWeightItem.setOnAction(e -> {
             try {
                 changeCategoryWeights();
             } catch (Exception ex) {
@@ -104,24 +114,12 @@ public class Generator {
             }
         });
 
-        //menuItem Events
-//        newGeneratorMenuItem.setOnAction(e -> {
-//            interfaceManager.createGenerator();
-//        });
-
         //scrollPane Settings
         ScrollPane scrollPane = new ScrollPane();
+        interfaceManager.formatScrollPane(scrollPane);
         VBox scrollPaneBody = new VBox();
-        scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPaneBody.setBackground(new Background((new BackgroundFill(
-                Color.rgb(255,255,255), CornerRadii.EMPTY, Insets.EMPTY))));
         this.scrollPaneBody = scrollPaneBody;
-        scrollPaneBody.setPrefHeight(setSize("Max").height);
-        scrollPaneBody.setMaxWidth(setSize("Gen").width);
         scrollPane.setContent(scrollPaneBody);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
 
         //closeButton Settings
 
@@ -130,203 +128,280 @@ public class Generator {
         mainBody.getChildren().add(scrollPane);
     }
 
-    //Display Methods
+    //Display Methods (Finished)
     public void display(){
         stagePrimary.displayGenerator(mainBody);
     }
-
     public void hide(){
         stagePrimary.hideGenerator(mainBody);
     }
 
     //Selector Methods
-    public void changeCSVs(){
-        //prepare the arrays of strings to send to the selector window
-        ArrayList<String> allOptions = new ArrayList<String>();
-        for (CSVData csvData : interfaceManager.getAllCSVDatas()){
-            allOptions.add(csvData.getName());
+    public void selectCSVs(){
+        //call the selector window
+        interfaceManager.selectScene.display("Changing CSVs",(HashMap<String, Object>)interfaceManager.getAllCSVDatas(),selectedCSVDatas);
+        //Automatically Deselect any category from a csv deselected
+        if (interfaceManager.getSelectScene().getUpdateList()) {
+            Iterator iterator = selectedCategories.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry aSelectedCategory = (Map.Entry) iterator.next();
+                if (!(selectedCSVDatas.containsKey(((Category) (aSelectedCategory.getValue())).getCsvData().getName()))) {
+                    selectedCategories.remove((String) aSelectedCategory.getKey());
+                }
+            }
         }
-        ArrayList<String> selectedOptions = new ArrayList<String>();
-        for (CSVData csvData : selectedCSVDatas){
-            selectedOptions.add(csvData.getName());
+    }
+    public void selectCategories(){
+        //prepare the HashMaps to send to the selector window
+        HashMap<String,Object> allOptions = new HashMap<>();
+        Iterator iterator = selectedCSVDatas.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry csvEntry = (Map.Entry)iterator.next();
+            for (Category category: ((CSVData) csvEntry.getValue()).getItemCategories()){
+                allOptions.put(category.getName(), category);
+            }
         }
         //call the selector window
-        interfaceManager.selectScene.display("Changing CSVs",allOptions,selectedOptions);
-        //update the list of selected CSVs
-        if (interfaceManager.getStageSelect().getUpdateList()){
-            selectedCSVDatas.clear();
-            for (String csvDataName : interfaceManager.getStageSelect().getSelectedList()){
-                for (CSVData csvData : interfaceManager.getAllCSVDatas()){
-                if (csvDataName.equals(csvData.getName())){
-                    selectedCSVDatas.add(csvData);
-                }
+        interfaceManager.selectScene.display("Selecting Categories",allOptions,selectedCategories);
+        //update the list of selected Categories
+        if (interfaceManager.getSelectScene().getUpdateList()){
+            iterator = selectedCategories.entrySet().iterator();
+            while (iterator.hasNext()){
+                Map.Entry selectedCategory = (Map.Entry)iterator.next();
+                if (!(recordedCategoriesWeights.containsKey((String) selectedCategory.getKey()))){
+                    recordedCategoriesWeights.put((String) selectedCategory.getKey(),60);
                 }
             }
         }
-        for (Category category : selectedCategories){
-            if (!(selectedCSVDatas.contains(category.getCsvData()))){
-                selectedCategories.remove(category);
-            }
-        }
-        trimCategoryWeight();
     }
 
-    public void changeCatagories(){
-        //prepare the arrays of strings to send to the selector window
-        ArrayList<String> allOptions = new ArrayList<String>();
-        for (CSVData csvData : selectedCSVDatas){
-            for (Category category : csvData.getItemCategories()) {
-                allOptions.add(category.getName());
+    //Category Weight Methods
+    public void changeCategoryWeights(){
+        interfaceManager.getGeneratorOptions().display("Change Categories Weight", recordedCategoriesWeights, selectedCategories);
+        if (interfaceManager.getGeneratorOptions().getUpdateList()){
+            recordedCategoriesWeights = interfaceManager.getGeneratorOptions().getCategoriesNewWeights();
+        }
+    }
+
+    //Generater Methods
+    public void setupAndCallGeneratorWeightedItem(Integer count){
+        System.out.println("Setting Up Generator");
+        HashMap<String, Item>       remainingItems      = new HashMap<String, Item>();
+        HashMap<String, Object>   chosenCategories    = new HashMap<String,Object>();
+        displayedItems.clear();
+        //Go through all selected categories composing remainItems
+        System.out.println(" - Composing list of remainingItems from selected categories");
+        Iterator iterator = selectedCategories.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry hashMapItem = (Map.Entry)iterator.next();
+            System.out.println("  > Attempting to add items from : " + (String)hashMapItem.getKey());
+            for (Item item : (((Category) hashMapItem.getValue()).getItems())){
+                remainingItems.put(item.getName(),item);
             }
         }
-        ArrayList<String> selectedOptions = new ArrayList<String>();
-        for (Category category : selectedCategories){
-            selectedOptions.add(category.getName());
+        //Call generateWeightedItem a number of times equal to count
+        for(int i = 1; i >= count ; i++){
+            System.out.println(" - Calling generateWeightedItem pass : " + i);
+            Item item = generateWeightedItem(selectedCategories, remainingItems, chosenCategories);
+            displayedItems.put(item.getName(),item);
         }
-        //call the selector window
-        interfaceManager.selectScene.display("Changing Categories",allOptions,selectedOptions);
-        //update the list of selected Categories
-        if (interfaceManager.getStageSelect().getUpdateList()){
-            selectedCategories.clear();
-            for (String categoryName : interfaceManager.getStageSelect().getSelectedList()) {
-                for (CSVData csvData : selectedCSVDatas){
-                    for (Category category : csvData.getItemCategories()) {
-                        if (categoryName.equals(category.getName())) {
-                            selectedCategories.add(category);
+        iterator = displayedItems.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry displayitem = (Map.Entry)iterator.next();
+            System.out.println(" - Displaying item : " + displayitem.getKey());
+            ((Item) displayitem.getValue()).display(this);
+        }
+        passCounter = 0;
+    }
+    public Item generateWeightedItem(HashMap<String, Object> remainingCategories, HashMap<String, Item> remainingItems, HashMap<String,Object> chosenCategories){
+        int passCounter =+ 1;
+        System.out.println("  > Generating Weighted Item Pass : " + passCounter);
+        ////SETTING UP A RANDOM NUMBER
+        //Assign the values of remaining categories to a new HashMap
+        //Traverse remainingCategories
+        // - Tallying the totalWeights.
+        //Generate a random number to max totalWeight.
+        ////SELECTING A RANDOM CATEGORY
+        //Traverse remainingCategories.
+        // - Subtract each categories weight from total weight.
+        // - - If (totalWeight becomes negative)
+        // - - - Set selectedCategory = currentCategory
+        // - - - Add the selectedCategory to chosenCategories
+        ////FILTERING THE (remainingItems) & BUILDING (remainingCategories)
+        //Empty remainingCategories
+        //Traverse remainingItems
+        // - For each of selectedCategories siblingCategories
+        // - - If (item contains siblingCategory)
+        // - - - remove the item.
+        // - - - break
+        // - - Else
+        // - - - Add all the items categories to remainingCategories
+        //For (chosenCategories)
+        // - remove category from remaining categories
+        ////CHECKING TO STOP RECURSION AND FOR ERROR
+        //If (len(remaining categories) == 0)
+        // - Item item = GenerateItem(remainingItems)
+        // - If (len(item.categories) < len(chosenCategories))
+        // - - Throw Error (Item Data From CSVs doesn't match, items are being generated
+        //                      based on number of items)
+        //Else
+        // - generateWeightedItem(remainingCategories, remainingItems, chosenCategories)
+        //Working out total weight of all selected categories
+        int totalWeight = 0;
+        Iterator iterator = remainingCategories.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry aRemainingCategory = (Map.Entry)iterator.next();
+            totalWeight += (Integer) recordedCategoriesWeights.get((String)aRemainingCategory.getKey());
+        }
+        //Generate a random number to max totalWeight.
+        Random rand = new Random();
+        Integer randomNumber = rand.nextInt(totalWeight);
+        //Selecting a category based on random number
+        Category selectedCategory = null;
+        iterator = remainingCategories.entrySet().iterator();
+        while (iterator.hasNext()){
+            Map.Entry aRemainingCategory = (Map.Entry)iterator.next();
+            randomNumber -= (Integer)recordedCategoriesWeights.get((String)aRemainingCategory.getKey());
+            if (randomNumber < 0){
+                selectedCategory = (Category)aRemainingCategory.getValue();
+                chosenCategories.put(selectedCategory.getName(),selectedCategory);
+                break;
+            }
+        }
+        //Filter remainingItems and filter remainingCategories
+        remainingCategories.clear();
+        for (Category siblingCategory: selectedCategory.getSiblingCategories()){
+            iterator = remainingItems.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry aRemainingItem = (Map.Entry) iterator.next();
+                Item item = (Item) aRemainingItem.getValue();
+                if (item.getItemCategory().contains(siblingCategory)) {
+                    remainingItems.remove(item.getName());
+                } else {
+                    for (Category category : item.getItemCategory()) {
+                        if ((selectedCategories.containsValue(category))) {
+                            remainingCategories.put(category.getName(), category);
                         }
                     }
                 }
             }
         }
-        assignDefaultWeights();
-        trimCategoryWeight();
-    }
-
-    //Category Weight Methods
-    public void assignDefaultWeights(){
-        //If the category hasn't been assigned a weight assign it a weight
-        for (Category category : selectedCategories){
-            //Go through all selected categories
-            if (!(categoriesWeight.containsKey(category))){
-                //If its already in the Hash Map skip it
-                //Else add it
-                categoriesWeight.put(category,50);
-            }
+        //Checking to stop recursion
+        if (remainingCategories.size() == 0){
+            return getRandomItem(remainingItems);
         }
+        else {
+            generateWeightedItem(remainingCategories, remainingItems, chosenCategories);
+        }
+        return null;
     }
-
-    public void trimCategoryWeight(){
-        //If a category isn't in selected categories it shouldn't be in categoriesNameWeight
-        Iterator iterator = categoriesWeight.entrySet().iterator();
+    public Item getRandomItem(HashMap remainingItems){
+        Random rand = new Random();
+        int randomNumber = rand.nextInt(remainingItems.size());
+        Iterator iterator = remainingItems.entrySet().iterator();
         while (iterator.hasNext()){
-            Map.Entry mapElement = (Map.Entry)iterator.next();
-            Category category = (Category) mapElement.getKey();
-            if (!(selectedCategories.contains(category))){
-                //If selected categories doesn't contain category remove that from categories weight
-                categoriesWeight.remove(mapElement.getKey());
+            Map.Entry aRemainingItem = (Map.Entry) iterator.next();
+            randomNumber =- 1;
+            if (randomNumber <= 0){
+                return (Item) aRemainingItem.getValue();
             }
         }
+        return null;
     }
-
-    public void changeCategoryWeights(){
-        interfaceManager.generatorOptions.display("Categories Weight",categoriesWeight);
-        if (interfaceManager.generatorOptions.getUpdateList()){
-            categoriesWeight = interfaceManager.generatorOptions.getCategoriesNewWeights();
+    public void changeCount(){
+        interfaceManager.getInputScene().display("Change Amount Generated", "Amount");
+        if (interfaceManager.getInputScene().getUpdate()){
+            this.count = (Integer) interfaceManager.getInputScene().getUserInput();
         }
     }
-
-    //Generation Methodz
-
-    public void generate(){
-
-    }
-
-    public Item getRandomCategory(HashMap<String,Integer> mustCategories, HashMap<String,Integer> remainingCategories) throws Exception {
-        //Step One (Setting up the total weight of the selected categories
-        int currentWeight = 0;
-        Iterator accumulator = remainingCategories.entrySet().iterator();
-        while (accumulator.hasNext()){
-            Map.Entry mapElement = (Map.Entry)accumulator.next();
-            int integer = (int)mapElement.getValue();
-            currentWeight += integer;
-        }
-        //Step Two (Generate a random number based on max weight)
-        Random random = new Random();
-        int randomnumber = random.nextInt(currentWeight);
-        //Step Three (Select a random Category)
-        Iterator counter = remainingCategories.entrySet().iterator();
-        while (counter.hasNext()){
-            Map.Entry mapElement = (Map.Entry)accumulator.next();
-            int weight = (int)mapElement.getValue();
-            String name = (String) mapElement.getKey();
-            currentWeight =- weight;
-            if (currentWeight > randomnumber){
-                mustCategories.put(name, weight);
-                return prepRemainingCategories(interfaceManager.getAllItems(), mustCategories);
-            }
-            else if (currentWeight < 0){
-                throw new Exception("A category wasn't chosen for generating a category.");
-            }
-        }
-        throw new Exception("This should ever be thrown.");
-    }
-
-    public Item prepRemainingCategories(ArrayList<Item> allItems, HashMap<String,Integer> mustCategories){
-        HashMap<String,Integer> refractoredCateogryList = new HashMap<>();
-        for (Item item : allItems){
-
-        }
-    }
-
-    public void getRandomItem(){}
 
     //Getter & Setter
+
     public AssetManager getAssetManager() {
         return assetManager;
     }
+
     public void setAssetManager(AssetManager assetManager) {
         this.assetManager = assetManager;
     }
+
     public InterfaceManager getInterfaceManager() {
         return interfaceManager;
     }
+
     public void setInterfaceManager(InterfaceManager interfaceManager) {
         this.interfaceManager = interfaceManager;
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+
     public VBox getMainBody() {
         return mainBody;
     }
+
     public void setMainBody(VBox mainBody) {
         this.mainBody = mainBody;
     }
+
     public Primary getStagePrimary() {
         return stagePrimary;
     }
+
     public void setStagePrimary(Primary stagePrimary) {
         this.stagePrimary = stagePrimary;
     }
+
     public VBox getScrollPaneBody() {
         return scrollPaneBody;
     }
+
     public void setScrollPaneBody(VBox scrollPaneBody) {
         this.scrollPaneBody = scrollPaneBody;
     }
-    public ArrayList<Category> getSelectedCategories() {
-        return selectedCategories;
+
+    public String getName() {
+        return name;
     }
-    public void setSelectedCategories(ArrayList<Category> selectedCategories) {
-        this.selectedCategories = selectedCategories;
+
+    public void setName(String name) {
+        this.name = name;
     }
-    public ArrayList<CSVData> getSelectedCSVDatas() {
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public HashMap<String, Object> getSelectedCSVDatas() {
         return selectedCSVDatas;
     }
-    public void setSelectedCSVDatas(ArrayList<CSVData> selectedCSVDatas) {
+
+    public void setSelectedCSVDatas(HashMap<String, Object> selectedCSVDatas) {
         this.selectedCSVDatas = selectedCSVDatas;
+    }
+
+    public HashMap<String, Integer> getRecordedCategoriesWeights() {
+        return recordedCategoriesWeights;
+    }
+
+    public void setRecordedCategoriesWeights(HashMap<String, Integer> recordedCategoriesWeights) {
+        this.recordedCategoriesWeights = recordedCategoriesWeights;
+    }
+
+    public HashMap<String, Object> getSelectedCategories() {
+        return selectedCategories;
+    }
+
+    public void setSelectedCategories(HashMap<String, Object> selectedCategories) {
+        this.selectedCategories = selectedCategories;
+    }
+
+    public HashMap<String, Item> getDisplayedItems() {
+        return displayedItems;
+    }
+
+    public void setDisplayedItems(HashMap<String, Item> displayedItems) {
+        this.displayedItems = displayedItems;
     }
 }

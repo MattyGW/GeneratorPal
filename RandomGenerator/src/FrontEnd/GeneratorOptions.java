@@ -30,7 +30,7 @@ public class GeneratorOptions {
     VBox scrollPaneBody;
     //Data tracked the Selector
     Boolean updateList;
-    HashMap<Category,Integer> categoriesNewWeights;
+    HashMap<String,Integer> categoriesNewWeights;
         //Upon cancel or confirm this need to be reassigned
 
     //Constructor
@@ -38,7 +38,7 @@ public class GeneratorOptions {
         this.updateList = false;
         this.interfaceManager = interfaceManager;
         this.stage = new Stage();
-        this.categoriesNewWeights = new HashMap<Category,Integer>();
+        this.categoriesNewWeights = new HashMap<String, Integer>();
         // scrollPaneBody is initialized later
 
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -130,7 +130,7 @@ public class GeneratorOptions {
     }
 
     //Display
-    public void display(String title, HashMap<String,Integer> categoriesNameWeight) {
+    public void display(String title, HashMap<String,Integer> categoriesNameWeight, HashMap<String, Object> selectedCategories) {
         //Takes a HashMap to display
         //   - labeles with the text of the string part
         //   - Textfields with the text of the int part

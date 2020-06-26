@@ -19,6 +19,7 @@ public class Input {
     InterfaceManager interfaceManager;
     Stage stage;
     //Fields
+    Boolean update;
     Object userInput;
     Label descriptionLabel;
     TextField textField;
@@ -27,6 +28,7 @@ public class Input {
     public Input(InterfaceManager interfaceManager){
         this.interfaceManager = interfaceManager;
         this.stage = new Stage();
+        this.update = false;
         stage.initModality(Modality.APPLICATION_MODAL);
 
         //mainBody Settings
@@ -105,7 +107,7 @@ public class Input {
     }
 
     //Display
-    public void display(String title, String textFieldLabel, String returnType){
+    public void display(String title, String textFieldLabel){
         descriptionLabel.setText(textFieldLabel);
         stage.setTitle(title);
         stage.showAndWait();
@@ -119,6 +121,7 @@ public class Input {
     public void confirm() throws Exception {
         stage.close();
         userInput = textField.getText();
+        textField.clear();
     }
     //Button Methods
 
@@ -145,5 +148,29 @@ public class Input {
 
     public void setUserInput(Object userInput) {
         this.userInput = userInput;
+    }
+
+    public Boolean getUpdate() {
+        return update;
+    }
+
+    public void setUpdate(Boolean update) {
+        this.update = update;
+    }
+
+    public Label getDescriptionLabel() {
+        return descriptionLabel;
+    }
+
+    public void setDescriptionLabel(Label descriptionLabel) {
+        this.descriptionLabel = descriptionLabel;
+    }
+
+    public TextField getTextField() {
+        return textField;
+    }
+
+    public void setTextField(TextField textField) {
+        this.textField = textField;
     }
 }

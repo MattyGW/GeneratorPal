@@ -16,11 +16,13 @@ public class Category {
      */
     private CSVData csvData;        //Reference
     private ArrayList<Item> items;  //Reference
+    private ArrayList<Category> siblingCategories;
     private String name;
     private int weight;
 
     /// Constructor
     public Category(String name, CSVData csvData){
+        this.siblingCategories = new ArrayList<>(); //Need to be sorted
         System.out.println("Constructing Category: " + name);
         this.name = name;
         this.csvData = csvData;
@@ -52,6 +54,12 @@ public class Category {
     }
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+    public ArrayList<Category> getSiblingCategories() {
+        return siblingCategories;
+    }
+    public void setSiblingCategories(ArrayList<Category> siblingCategories) {
+        this.siblingCategories = siblingCategories;
     }
 
     ///Add Methods

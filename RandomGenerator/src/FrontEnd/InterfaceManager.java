@@ -4,10 +4,17 @@ import Assets.AssetManager;
 import BackEnd.CSVData;
 import BackEnd.Category;
 import BackEnd.Item;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -16,9 +23,9 @@ import java.util.HashMap;
 
 public class InterfaceManager {
     //Item Data
-    HashMap<String,CSVData>     allCSVDatas;
-    HashMap<String,Category>    allCategorys;
-    HashMap<String,Item>        allItems;
+    HashMap<String, Object>     allCSVDatas;
+    HashMap<String, Category>   allCategorys;
+    HashMap<String, Item>       allItems;
     HashMap<String,Generator>   allGenerators;
     //Scene References
     Error           errorScene;
@@ -27,10 +34,12 @@ public class InterfaceManager {
     Select          selectScene;
     GeneratorOptions generatorOptions;
     //Other References
-    AssetManager    assetManager;
+    AssetManager assetManager;
+    private static InterfaceManager interfaceManager;
 
-    //Constructor
-    public InterfaceManager(){
+    //Constructor & Instance Method
+    private InterfaceManager(){
+        System.out.println("Constructing InterfaceManager");
         //Initialise Data Storage
         allCSVDatas = new HashMap<>();
         allCategorys = new HashMap<>();
@@ -46,44 +55,95 @@ public class InterfaceManager {
         //Display Primary Scene
         primaryScene.display();
     }
+    public static InterfaceManager getInstance(){
+        if (interfaceManager == null){
+            interfaceManager = new InterfaceManager();
+        }
+        return interfaceManager;
+    }
 
-    //Size Management Methods
-    public static void formatButton(Button button){
+    //Formatting & Size Methods
+    public void formatButton(Button button){
         button.setMinSize(80,30);
         button.setMaxSize(80,30);
+        button.setPrefSize(80,30);
         button.setFont(Font.font("verdana", FontWeight.NORMAL,10));
     }
-
-    public static void formatStage(Stage stage){
-        stage.setMinSize(80,30);
-        stage.setMaxSize(80,30);
-        stage.setFont(Font.font("verdana", FontWeight.NORMAL,10));
+    public void formatStage(Stage stage){
+        stage.setWidth((this.getScreenSize().width)/8); //Mess
+        stage.setHeight((this.getScreenSize().height)/3); //Mess
+        stage.setMaxHeight(this.getScreenSize().height);
+        stage.setMinHeight((this.getScreenSize().height)/10);
+        stage.setMaxWidth(this.getScreenSize().width);
+        stage.setMinWidth((this.getScreenSize().width)/10);
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+    }
+    public void formatTextField(TextField textField){
+        textField.setMaxSize(230,20);
+        textField.setMinSize(230,20);
+        textField.setPrefSize(230,20);
+    }
+    public void formatMainBody(Object object) {
+        if (object.getClass().equals(VBox.class)) {
+            VBox vBox = (VBox) object;
+            vBox.setSpacing(0);
+            vBox.setPadding(new javafx.geometry.Insets(1, 1, 1, 1));
+            vBox.setBackground(new Background(new BackgroundFill(
+                    Color.rgb(0, 0, 0), CornerRadii.EMPTY, Insets.EMPTY)));
+            vBox.setPrefSize(250, 100);
+            vBox.setAlignment(Pos.CENTER);
+            VBox.setVgrow(vBox, Priority.ALWAYS);
+        }
+        if (object.getClass().equals(HBox.class)) {
+            HBox hBox = (HBox) object;
+            hBox.setSpacing(0);
+            hBox.setPadding(new javafx.geometry.Insets(1, 1, 1, 1));
+            hBox.setBackground(new Background(new BackgroundFill(
+                    Color.rgb(80, 80, 80), CornerRadii.EMPTY, Insets.EMPTY)));
+            hBox.setPrefSize(250, 100);
+            VBox.setVgrow(hBox, Priority.ALWAYS);
+        }
+    }
+    public void formatSecondaryBody(Object object) {
+        if (object.getClass().equals(VBox.class)) {
+            VBox vBox = (VBox) object;
+            vBox.setSpacing(0);
+            vBox.setPadding(new javafx.geometry.Insets(1, 1, 1, 1));
+            vBox.setBackground(new Background(new BackgroundFill(
+                    Color.rgb(200, 200, 200), CornerRadii.EMPTY, Insets.EMPTY)));
+            vBox.setPrefWidth(98);
+            VBox.setVgrow(vBox, Priority.ALWAYS);
+        }
+        if (object.getClass().equals(HBox.class)) {
+            HBox hBox = (HBox) object;
+            hBox.setSpacing(0);
+            hBox.setPadding(new javafx.geometry.Insets(1, 1, 1, 1));
+            hBox.setBackground(new Background(new BackgroundFill(
+                    Color.rgb(200, 200, 200), CornerRadii.EMPTY, Insets.EMPTY)));
+            hBox.setPrefWidth(98);
+            VBox.setVgrow(hBox, Priority.ALWAYS);
+        }
+    }
+    public void formatScrollPane(ScrollPane scrollPane){
+        scrollPane.hbarPolicyProperty().setValue(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.vbarPolicyProperty().setValue(javafx.scene.control.ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setBackground(new Background((new BackgroundFill(
+                Color.rgb(255,255,255), CornerRadii.EMPTY, Insets.EMPTY))));
+        scrollPane.setMinSize(this.getScreenSize().width/12, this.getScreenSize().height/12);
+        scrollPane.setMaxSize(this.getScreenSize().width, this.getScreenSize().height);
+        scrollPane.setPrefSize(this.getScreenSize().width, this.getScreenSize().height);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
     }
 
-    public static int screenSize(String axis){
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        switch (axis){
-            case "width":   return (int) screenSize.width;
-            case "height":  return (int) screenSize.height;
-        }
-        System.out.println("Error: screenSize: Incorrect Input: \"" + axis +"\"");
-        //throw new Exception("Error: screenSize: Incorrect Input: \"" + axis +"\"");
-        return 20;
-    }
-    public static Dimension setSize(String string){
-        switch (string){
-            case "Max": return new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
-            case "Min": return new Dimension(285,200);
-            case "Pref": return new Dimension(285, 200);
-            case "Gen": return new Dimension(267, 200);
-        }
-        System.out.println("Incorrect Input setSize");
-        return new Dimension(500,500);
+    public Dimension getScreenSize(){
+        return Toolkit.getDefaultToolkit().getScreenSize();
     }
 
     //Menu Methods
     public void createGenerator() throws Exception {
-        inputScene.display("New Generator", "Insert Name: ", "String");
+        inputScene.display("New Generator", "Insert Name: ");
         if (!(inputScene.userInput.equals(false))){
             String input = (String) inputScene.getUserInput();
             Generator generator = new Generator(this, input,primaryScene);
@@ -110,10 +170,10 @@ public class InterfaceManager {
     }
 
     //Field Getters & Setters
-    public HashMap<String, CSVData> getAllCSVDatas() {
+    public HashMap<String, Object> getAllCSVDatas() {
         return allCSVDatas;
     }
-    public void setAllCSVDatas(HashMap<String, CSVData> allCSVDatas) {
+    public void setAllCSVDatas(HashMap<String, Object> allCSVDatas) {
         this.allCSVDatas = allCSVDatas;
     }
     public HashMap<String, Category> getAllCategorys() {
@@ -169,5 +229,13 @@ public class InterfaceManager {
     }
     public void setGeneratorOptions(GeneratorOptions generatorOptions) {
         this.generatorOptions = generatorOptions;
+    }
+
+    public static InterfaceManager getInterfaceManager() {
+        return interfaceManager;
+    }
+
+    public static void setInterfaceManager(InterfaceManager interfaceManager) {
+        InterfaceManager.interfaceManager = interfaceManager;
     }
 }

@@ -1,19 +1,11 @@
 package FrontEnd;
-
-import Assets.AssetManager;
-import BackEnd.*;
-
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.util.ArrayList;
-
-import static FrontEnd.InterfaceManager.setSize;
 
 public class Primary {
     //References
@@ -31,22 +23,8 @@ public class Primary {
 
         //mainBody
         VBox mainBody = new VBox();
-        mainBody.setSpacing(1);
-        mainBody.setPadding(new Insets(0,0,0,0));
-        mainBody.setBackground(new Background(new BackgroundFill(
-                Color.rgb(40,40,40),
-                CornerRadii.EMPTY, Insets.EMPTY)));
-        mainBody.setMaxSize(setSize("Max").width,setSize("Max").height);
-        mainBody.setMinSize(setSize("Pref").width,setSize("Pref").height);
-        VBox.setVgrow(mainBody, Priority.ALWAYS);
-
-        //outerBody
-        AnchorPane outerBody = new AnchorPane();
-        outerBody.getChildren().add(mainBody);
-        outerBody.setTopAnchor(mainBody, 0.0);
-        outerBody.setLeftAnchor(mainBody, 0.0);
-        outerBody.setRightAnchor(mainBody, 0.0);
-        outerBody.setBottomAnchor(mainBody, 0.0);
+        interfaceManager.formatMainBody(mainBody);
+        mainBody.setPrefSize(interfaceManager.getScreenSize().width,interfaceManager.getScreenSize().height);
 
         //menuBar
         MenuBar menuBar = new MenuBar();
@@ -73,55 +51,32 @@ public class Primary {
         newGeneratorMenuItem.setOnAction(e -> {
             try {
                 interfaceManager.createGenerator();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         });
         newCSVDataMenuItem.setOnAction(e -> {
             try {
                 interfaceManager.inputCSV();
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         });
-
         inputMenuItem.setOnAction(e -> {
-            try {
-                interfaceManager.inputScene.display("Test Title","Test Text Field Label: ","String");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-//        selectMenuItem.setOnAction(e -> {
-//            try {
-//                interfaceManager.selectScene.display();
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        });
+            interfaceManager.inputScene.display("Test Title","Test Text Field Label: ");});
         errorMenuItem.setOnAction(e -> {
-            try {
-                interfaceManager.errorScene.display("Default Error", "This is the default error, I should loop around and not fit on one line. Hello I hope I work.");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
+            interfaceManager.errorScene.display("Default Error", "This is the default error, I should loop around and not fit on one line. Hello I hope I work.");});
 
         //scrollPane Settings
         ScrollPane scrollPane = new ScrollPane();
+        interfaceManager.formatScrollPane(scrollPane);
         HBox scrollPaneBody = new HBox();
-//        scrollPaneBody.setSpacing(1);
-//        scrollPaneBody.setPadding(new Insets(1,1,1,1));
-        scrollPaneBody.setBackground(new Background((new BackgroundFill(
-                Color.rgb(255,255,255), CornerRadii.EMPTY, Insets.EMPTY))));
         this.scrollPaneBody = scrollPaneBody;
-        scrollPaneBody.setPrefHeight(setSize("Max").height);
-        scrollPaneBody.setPrefWidth(setSize("Max").width);
-        scrollPane.hbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.vbarPolicyProperty().setValue(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setContent(scrollPaneBody);
+        scrollPane.hbarPolicyProperty().setValue(javafx.scene.control.ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.vbarPolicyProperty().setValue(javafx.scene.control.ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
+        scrollPane.setContent(scrollPaneBody);
 
         //Assignment Section
         mainBody.getChildren().add(menuBar);
@@ -129,16 +84,14 @@ public class Primary {
 
         //stage Settings
         this.stage = new Stage();
-        Scene PrimaryScene = new Scene(outerBody);
+        interfaceManager.formatStage(stage);
+        stage.setResizable(true);
+        stage.setWidth((interfaceManager.getScreenSize().width)/2);
+        stage.setHeight((interfaceManager.getScreenSize().width)/3);
         stage.initModality(Modality.WINDOW_MODAL);
         stage.setTitle("Variable Weighted Random Generator");
+        Scene PrimaryScene = new Scene(mainBody);
         stage.setScene(PrimaryScene);
-        stage.setWidth(setSize("Pref").width);
-        stage.setHeight(setSize("Pref").height);
-        stage.setMaxWidth(setSize("Max").width);
-        stage.setMinWidth(setSize("Min").width);
-        stage.setMaxHeight(setSize("Max").height);
-        stage.setMinHeight(setSize("Min").height);
     }
 
     //Display

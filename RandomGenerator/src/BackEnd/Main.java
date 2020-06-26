@@ -15,7 +15,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Starting Program");
-        InterfaceManager interfaceManager = new InterfaceManager();
+        InterfaceManager interfaceManager = InterfaceManager.getInstance();
         //TestBed
     }
 }

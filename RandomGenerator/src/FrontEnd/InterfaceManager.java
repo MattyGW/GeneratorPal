@@ -143,9 +143,10 @@ public class InterfaceManager {
 
     //Menu Methods
     public void createGenerator() throws Exception {
-        inputScene.display("New Generator", "Insert Name: ");
-        if (!(inputScene.userInput.equals(false))){
-            String input = (String) inputScene.getUserInput();
+        String generatorName = "";
+        inputScene.display("New Generator", "Insert Name: ", generatorName);
+        if (inputScene.updated.equals(true)){
+            String input = (String) inputScene.inputVariable;
             Generator generator = new Generator(this, input,primaryScene);
             generator.display();
             allGenerators.put(generator.getName(),generator);

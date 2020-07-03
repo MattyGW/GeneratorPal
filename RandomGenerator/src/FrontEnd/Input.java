@@ -1,6 +1,8 @@
 package FrontEnd;
 
 import Assets.AssetManager;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,16 +21,15 @@ public class Input {
     InterfaceManager interfaceManager;
     Stage stage;
     //Fields
-    Boolean update;
-    Object userInput;
     Label descriptionLabel;
     TextField textField;
+    Boolean updated;
+    Object inputVariable;
 
     //Constructor
     public Input(InterfaceManager interfaceManager){
         this.interfaceManager = interfaceManager;
         this.stage = new Stage();
-        this.update = false;
         stage.initModality(Modality.APPLICATION_MODAL);
 
         //mainBody Settings
@@ -107,7 +108,23 @@ public class Input {
     }
 
     //Display
-    public void display(String title, String textFieldLabel){
+    public void display(String title, String textFieldLabel, Object inputVariable){
+        //The call gives the input a variable and the inputScreen gets a input from the user of the same type.
+        this.inputVariable = inputVariable;
+        if (inputVariable.getClass() == Integer.class){
+            textField.setText((String) inputVariable.toString());
+            textField.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+                    if (!newValue.matches("\\d{0,3}")){
+                        textField.setText(oldValue);
+                    }
+                }
+            });
+            assert true; //create a listener to force only numbers
+        } else {
+            textField.setText((String) inputVariable);
+        }
         descriptionLabel.setText(textFieldLabel);
         stage.setTitle(title);
         stage.showAndWait();
@@ -115,62 +132,28 @@ public class Input {
 
     //Buttons Methods
     public void close() throws Exception {
+        updated = false;
         stage.close();
-        userInput = false;
+        textField.clear();
     }
     public void confirm() throws Exception {
-        stage.close();
-        userInput = textField.getText();
+        if (textField.getText().isBlank() ){
+            interfaceManager.getErrorScene().display("Blank Input Error","The entry can't just be blank.");
+        }
+        else if(textField.getText().equals("0")) {
+            interfaceManager.getErrorScene().display("Zero Input Error", "The entry can't be Zero.");
+        } else {
+            if (inputVariable.getClass().equals(Integer.class)) {
+                inputVariable = Integer.parseInt(textField.getText());
+            } else {
+                inputVariable = textField.getText();
+            }
+            updated = true;
+            stage.close();
+        }
         textField.clear();
     }
     //Button Methods
 
     //Getters & Setters
-    public InterfaceManager getInterfaceManager() {
-        return interfaceManager;
-    }
-
-    public void setInterfaceManager(InterfaceManager interfaceManager) {
-        this.interfaceManager = interfaceManager;
-    }
-
-    public Stage getStage() {
-        return stage;
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public Object getUserInput() {
-        return userInput;
-    }
-
-    public void setUserInput(Object userInput) {
-        this.userInput = userInput;
-    }
-
-    public Boolean getUpdate() {
-        return update;
-    }
-
-    public void setUpdate(Boolean update) {
-        this.update = update;
-    }
-
-    public Label getDescriptionLabel() {
-        return descriptionLabel;
-    }
-
-    public void setDescriptionLabel(Label descriptionLabel) {
-        this.descriptionLabel = descriptionLabel;
-    }
-
-    public TextField getTextField() {
-        return textField;
-    }
-
-    public void setTextField(TextField textField) {
-        this.textField = textField;
-    }
 }

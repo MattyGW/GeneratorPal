@@ -4,12 +4,21 @@ import Assets.AssetManager;
 import BackEnd.CSVData;
 import BackEnd.Category;
 import BackEnd.Item;
+import com.sun.javafx.collections.MappingChange;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
+import java.io.Console;
 import java.util.*;
 
 public class Generator {
@@ -27,7 +36,7 @@ public class Generator {
     HashMap<String,Object>      selectedCSVDatas;
     HashMap<String,Object>      selectedCategories;
     HashMap<String,Integer>     recordedCategoriesWeights;
-    HashMap<String,Item>        displayedItems;
+    HashMap<Item,Integer>       displayedItems;
 
     //Constructor (Needs Checking)
     public Generator(){}
@@ -39,7 +48,7 @@ public class Generator {
         this.selectedCSVDatas = new HashMap<String,Object>();
         this.recordedCategoriesWeights = new HashMap<String,Integer>();
         this.selectedCategories = new HashMap<String,Object>();
-        this.displayedItems = new HashMap<String,Item>();
+        this.displayedItems = new HashMap<Item,Integer>();
         this.stagePrimary = stagePrimary;
 
         //mainBody Settings
@@ -65,7 +74,7 @@ public class Generator {
         OptionsMenu.getItems().add(generateItem);
         generateItem.setOnAction(e -> {
             try {
-                setupAndCallGeneratorWeightedItem(count);
+                setupGenerator();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -184,118 +193,146 @@ public class Generator {
     }
 
     //Generater Methods
-    public void setupAndCallGeneratorWeightedItem(Integer count){
+    public void setupGenerator() throws Exception {
         System.out.println("Setting Up Generator");
-        HashMap<String, Item>       remainingItems      = new HashMap<String, Item>();
-        HashMap<String, Object>   chosenCategories    = new HashMap<String,Object>();
+        //Clear the list of displayed items & scrollpane body
         displayedItems.clear();
-        //Go through all selected categories composing remainItems
-        System.out.println(" - Composing list of remainingItems from selected categories");
-        Iterator iterator = selectedCategories.entrySet().iterator();
-        while (iterator.hasNext()){
-            Map.Entry hashMapItem = (Map.Entry)iterator.next();
-            System.out.println("  > Attempting to add items from : " + (String)hashMapItem.getKey());
-            for (Item item : (((Category) hashMapItem.getValue()).getItems())){
-                remainingItems.put(item.getName(),item);
+        scrollPaneBody.getChildren().clear();
+        //The HashMap remaining items if filtered down to a final list
+        HashMap<String, Item> remainingItems = composeListOfRemainingItems(selectedCategories);
+        //The Integer random is used to generate a random number
+        Random random = new Random();
+        //Select an item "count" times, based on selectedCategories and categoriesWeights
+        for (int i = 0; i <= count-1; i++) {
+            System.out.println(" - Generating Weighted Item Number : " + (i+1));
+            try{
+                Item item = filterRemainingItems((HashMap<String, Item>) remainingItems.clone(), (HashMap<String, Object>) selectedCategories.clone(), random);
+                if (displayedItems.containsKey(item)) {
+                    System.out.println(" - Increasing the count of " + item.getName() + " in displayItems.");
+                    displayedItems.put(item, displayedItems.get(item) + 1);
+                } else {
+                    System.out.println(" - Adding the item " + item.getName() + " to displayItems.");
+                    displayedItems.put(item, 1);
+                }
+            } catch (Exception e) {
+                interfaceManager.getErrorScene().display("Zero Weight Error", "The weight of total selected categories is equal to zero");
+                e.printStackTrace();
             }
+            this.passCounter = 0;
         }
-        //Call generateWeightedItem a number of times equal to count
-        for(int i = 1; i >= count ; i++){
-            System.out.println(" - Calling generateWeightedItem pass : " + i);
-            Item item = generateWeightedItem(selectedCategories, remainingItems, chosenCategories);
-            displayedItems.put(item.getName(),item);
-        }
-        iterator = displayedItems.entrySet().iterator();
-        while (iterator.hasNext()){
-            Map.Entry displayitem = (Map.Entry)iterator.next();
-            System.out.println(" - Displaying item : " + displayitem.getKey());
-            ((Item) displayitem.getValue()).display(this);
-        }
-        passCounter = 0;
+        System.out.println("Current state of display items" + displayedItems.keySet());
+        displayGeneratedItems();
     }
-    public Item generateWeightedItem(HashMap<String, Object> remainingCategories, HashMap<String, Item> remainingItems, HashMap<String,Object> chosenCategories){
-        int passCounter =+ 1;
-        System.out.println("  > Generating Weighted Item Pass : " + passCounter);
-        ////SETTING UP A RANDOM NUMBER
-        //Assign the values of remaining categories to a new HashMap
-        //Traverse remainingCategories
-        // - Tallying the totalWeights.
-        //Generate a random number to max totalWeight.
-        ////SELECTING A RANDOM CATEGORY
-        //Traverse remainingCategories.
-        // - Subtract each categories weight from total weight.
-        // - - If (totalWeight becomes negative)
-        // - - - Set selectedCategory = currentCategory
-        // - - - Add the selectedCategory to chosenCategories
-        ////FILTERING THE (remainingItems) & BUILDING (remainingCategories)
-        //Empty remainingCategories
-        //Traverse remainingItems
-        // - For each of selectedCategories siblingCategories
-        // - - If (item contains siblingCategory)
-        // - - - remove the item.
-        // - - - break
-        // - - Else
-        // - - - Add all the items categories to remainingCategories
-        //For (chosenCategories)
-        // - remove category from remaining categories
-        ////CHECKING TO STOP RECURSION AND FOR ERROR
-        //If (len(remaining categories) == 0)
-        // - Item item = GenerateItem(remainingItems)
-        // - If (len(item.categories) < len(chosenCategories))
-        // - - Throw Error (Item Data From CSVs doesn't match, items are being generated
-        //                      based on number of items)
-        //Else
-        // - generateWeightedItem(remainingCategories, remainingItems, chosenCategories)
-        //Working out total weight of all selected categories
+
+    public Integer calculateCategoryWeights(HashMap<String, Object> categories ){
+        System.out.println("  -> Calculating total weight of : " + categories.keySet().toString());
         int totalWeight = 0;
-        Iterator iterator = remainingCategories.entrySet().iterator();
+        Iterator iterator = categories.entrySet().iterator();
         while (iterator.hasNext()){
             Map.Entry aRemainingCategory = (Map.Entry)iterator.next();
             totalWeight += (Integer) recordedCategoriesWeights.get((String)aRemainingCategory.getKey());
         }
-        //Generate a random number to max totalWeight.
-        Random rand = new Random();
-        Integer randomNumber = rand.nextInt(totalWeight);
-        //Selecting a category based on random number
-        Category selectedCategory = null;
-        iterator = remainingCategories.entrySet().iterator();
+        return totalWeight;
+    }
+
+    public HashMap<String,Item> composeListOfRemainingItems(HashMap<String,Object> remainingCategories){
+        System.out.println(" - Composing list of remainingItems from remainingCategories");
+        HashMap<String,Item> remainingItems = new HashMap<>();
+        //Go through each category composing a list of items from their items.
+        Iterator iterator = remainingCategories.entrySet().iterator();
         while (iterator.hasNext()){
-            Map.Entry aRemainingCategory = (Map.Entry)iterator.next();
-            randomNumber -= (Integer)recordedCategoriesWeights.get((String)aRemainingCategory.getKey());
-            if (randomNumber < 0){
-                selectedCategory = (Category)aRemainingCategory.getValue();
-                chosenCategories.put(selectedCategory.getName(),selectedCategory);
-                break;
+            Map.Entry entry = (Map.Entry)iterator.next();
+            System.out.println("  > Attempting to add \"" + ((Category)entry.getValue()).getItems() + "\" items from \"" + (String)entry.getKey() + "\"");
+            for (Item item : (((Category) entry.getValue()).getItems())){
+                remainingItems.put(item.getName(),item);
             }
         }
-        //Filter remainingItems and filter remainingCategories
-        remainingCategories.clear();
-        for (Category siblingCategory: selectedCategory.getSiblingCategories()){
-            iterator = remainingItems.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry aRemainingItem = (Map.Entry) iterator.next();
-                Item item = (Item) aRemainingItem.getValue();
-                if (item.getItemCategory().contains(siblingCategory)) {
-                    remainingItems.remove(item.getName());
-                } else {
-                    for (Category category : item.getItemCategory()) {
-                        if ((selectedCategories.containsValue(category))) {
-                            remainingCategories.put(category.getName(), category);
-                        }
-                    }
-                }
+        return remainingItems;
+    }
+
+    public Category randomlySelectCategory(HashMap<String,Object> remainingCategories,
+                                           Integer randomNumber) {
+        System.out.println("  -> Randomly selecting category from remaining categories");
+        Iterator iterator = remainingCategories.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry aRemainingCategory = (Map.Entry) iterator.next();
+            randomNumber -= (Integer) recordedCategoriesWeights.get((String) aRemainingCategory.getKey());
+            if (randomNumber < 0) {
+
+                return (Category) aRemainingCategory.getValue();
             }
-        }
-        //Checking to stop recursion
-        if (remainingCategories.size() == 0){
-            return getRandomItem(remainingItems);
-        }
-        else {
-            generateWeightedItem(remainingCategories, remainingItems, chosenCategories);
         }
         return null;
     }
+
+    public Item filterRemainingItems(HashMap<String, Item> remainingItems,
+                                     HashMap<String, Object> remainingCategories,
+                                     Random random) throws Exception {
+        int passCounter =+ 1;
+        System.out.println("  >>> Filtering Remaining Items Pass : " + passCounter + "\n  -> Current number of items : " + remainingItems.size() + "\n  -> Current number of Categories : " + remainingCategories.size());
+        //Generate a random number
+        Integer randomNumber = random.nextInt(calculateCategoryWeights(remainingCategories));
+        System.out.println("  -> Random Number For This Pass : " + randomNumber);
+        //Selecting a category based on random number & remove it from remaining categories
+        Category selectedCategory = randomlySelectCategory(remainingCategories,randomNumber);
+        System.out.println("  -> The Category Selected is : " + selectedCategory.getName());
+        remainingCategories.remove(selectedCategory.getName());
+        //Go through all remaining items
+        Iterator iterator;
+        iterator = remainingItems.entrySet().iterator();
+        ArrayList<String> itemsToBeFiltered = new ArrayList();
+        while (iterator.hasNext()) {
+            Map.Entry aRemainingItem = (Map.Entry) iterator.next();
+            Item item = (Item) aRemainingItem.getValue();
+            ////Go through the selected categories siblingCategories
+            for (Category siblingCategory : selectedCategory.getSiblingCategories()) {
+                //Remove items that contain a sibling category
+                if (item.getItemCategory().contains(siblingCategory)) {
+                    itemsToBeFiltered.add(item.getName());
+                }
+            }
+        }
+        for (Category siblingCategory : selectedCategory.getSiblingCategories()) {
+            remainingCategories.remove(siblingCategory.getName());
+        }
+        for (String itemName:itemsToBeFiltered){
+            remainingItems.remove(itemName);
+        }
+        System.out.println("  -> After pass number of items : " + remainingItems.size() + "\n  -> After Pass number of Categories : " + remainingCategories.size());
+        //Checking to stop recursion
+        if (remainingCategories.size() == 0) {
+            return getRandomItem(remainingItems);
+        } else {
+            return filterRemainingItems(remainingItems, remainingCategories, random);
+        }
+    }
+
+    public void displayGeneratedItems(){
+        Iterator iterator = displayedItems.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry itemEntry = (Map.Entry) iterator.next();
+
+            HBox itemSlot = new HBox();
+
+            Label itemNameLabel = new Label(((Item) itemEntry.getKey()).getName());
+            itemNameLabel.setMaxSize(interfaceManager.getScreenSize().width / 12, 20);
+
+            Label itemCountLabel = new Label(("x" +((Integer) itemEntry.getValue()).toString()));
+            itemCountLabel.setMaxSize(20, 20);
+
+            Button itemButton = new Button();
+            itemButton.setPrefSize(itemButton.getMaxWidth(), itemButton.getMaxWidth());
+            itemButton.setMaxSize(20, 20);
+
+            scrollPaneBody.getChildren().add(itemSlot);
+            itemSlot.getChildren().add(itemNameLabel);
+            itemSlot.getChildren().add(itemCountLabel);
+            itemSlot.getChildren().add(itemButton);
+        }
+    }
+
     public Item getRandomItem(HashMap remainingItems){
+        System.out.println("  >>> Generating Item From Filtered List");
         Random rand = new Random();
         int randomNumber = rand.nextInt(remainingItems.size());
         Iterator iterator = remainingItems.entrySet().iterator();
@@ -303,15 +340,20 @@ public class Generator {
             Map.Entry aRemainingItem = (Map.Entry) iterator.next();
             randomNumber =- 1;
             if (randomNumber <= 0){
+                System.out.println("  -> Chosen Item : " + aRemainingItem.getKey());
                 return (Item) aRemainingItem.getValue();
             }
         }
         return null;
     }
+
     public void changeCount(){
-        interfaceManager.getInputScene().display("Change Amount Generated", "Amount");
-        if (interfaceManager.getInputScene().getUpdate()){
-            this.count = (Integer) interfaceManager.getInputScene().getUserInput();
+        System.out.println("Attempting to change amount of items generated");
+        interfaceManager.getInputScene().display("Change Amount Generated", "Amount", count);
+        System.out.println(" - Count changed : " + interfaceManager.inputScene.updated);
+        if ((interfaceManager.inputScene.updated.equals(true))){
+            this.count = (Integer) interfaceManager.getInputScene().inputVariable;
+            System.out.println(" - New count is : " + count);
         }
     }
 
@@ -395,13 +437,5 @@ public class Generator {
 
     public void setSelectedCategories(HashMap<String, Object> selectedCategories) {
         this.selectedCategories = selectedCategories;
-    }
-
-    public HashMap<String, Item> getDisplayedItems() {
-        return displayedItems;
-    }
-
-    public void setDisplayedItems(HashMap<String, Item> displayedItems) {
-        this.displayedItems = displayedItems;
     }
 }

@@ -2,8 +2,11 @@ package BackEnd;
 
 import FrontEnd.Generator;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
 Fields
@@ -17,12 +20,11 @@ Methods
 - toString()
  */
 public class Item {
-    private ArrayList<Category>   itemCategory;
-    private CSVData csvData;
-    private String  name;
-    private String  rules;
-    private String  description;
-    private Button itemButton;
+    private ArrayList<Category>         itemCategory;
+    private CSVData                     csvData;
+    private String                      name;
+    private String                      rules;
+    private String                      description;
 
     /// Constructor
     public Item(String name, String rules, String description, CSVData csvData) {
@@ -34,10 +36,6 @@ public class Item {
         //Assigning Parent Objects
         this.itemCategory = new ArrayList<>();
         this.csvData = csvData;
-        //Display Section
-        this.itemButton = new Button();
-        itemButton.setMinSize(100,20);
-        itemButton.setMaxSize(100,20);
     }
 
     ///Getters and Setters
@@ -77,11 +75,6 @@ public class Item {
         itemCategory.add(category);
     }
 
-    ///Other Methods
-    public void display(Generator generator){
-        generator.getScrollPaneBody().getChildren().add(itemButton);
-    }
-
     public String[] toString(Item item) {
         /// itemCategory toString ///
         String[] categoryNames;
@@ -118,4 +111,5 @@ public class Item {
         returnValue[6] = ("Description: " + description);
         return returnValue;
     }
+
 }

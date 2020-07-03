@@ -2,9 +2,7 @@ package BackEnd;
 
 import javax.lang.model.element.Element;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 import static com.sun.javafx.fxml.expression.Expression.not;
 
@@ -37,6 +35,9 @@ public class CSVData {
         this.name = name;
         this.itemCategories = new ArrayList<Category>();
         this.items = new ArrayList<Item>();
+        //Data for category groups
+        Integer groupCounter = 0;
+        ArrayList<HashMap<String, Category>> allCategoryGroups = new ArrayList<>();
         ///Importing data from a csv
         BufferedReader csvReader;
         String currentRow = null;
@@ -48,6 +49,7 @@ public class CSVData {
             throw new Exception("Method: loadItemTypesCSV \n - Unable to find file: \"" + file + "\"");}
         // Going through the open file
         while (currentRow != null) {
+            //Other stuff
             String[] elements = currentRow.split("\t");
             int rowLength = elements.length;
             if (rowLength < 3){
@@ -66,6 +68,14 @@ public class CSVData {
                 this.addItem(item);
                 for (int i = 1; i < rowLength-2; i++){
                     Category category = cautionedCategoryCreation(elements[i]);
+                    System.out.println("There is " + allCategoryGroups.size() + " category groups, the row length is "+ rowLength);
+                    if (allCategoryGroups.size() < (rowLength-3)){
+                        System.out.println(" - Adding another category group.");
+                        HashMap<String,Category> categoryGroup = new HashMap<>();
+                        allCategoryGroups.add(categoryGroup);
+                    }
+                    //Stuff for category groups
+                    allCategoryGroups.get(i-1).put(category.getName(),category);
                     category.addItem(item);
                     item.addCategory(category);
                     }
@@ -79,8 +89,27 @@ public class CSVData {
             System.out.println("Unable to close file" + file);
             throw new Exception("Unable to close file" + file);
         }
-        System.out.println(itemCategories.size());
-        System.out.println(items.size());
+        fillSiblingCategories(allCategoryGroups);
+    }
+
+    public void fillSiblingCategories(ArrayList<HashMap<String, Category>> allCategoryGroups){
+        System.out.println("Filling Sibling Categories");
+        System.out.println(allCategoryGroups);
+        for (HashMap<String,Category> categoryGroup: allCategoryGroups){
+            System.out.println(categoryGroup);
+            Iterator iterator = categoryGroup.entrySet().iterator();
+            ArrayList<Category> categoryGroupAsArray = new ArrayList<>();
+            while (iterator.hasNext()) {
+                Map.Entry categoryEntry = (Map.Entry) iterator.next();
+                categoryGroupAsArray.add((Category)categoryEntry.getValue());
+            }
+            iterator = categoryGroup.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry categoryEntry = (Map.Entry) iterator.next();
+                ((Category)categoryEntry.getValue()).setSiblingCategories((ArrayList) categoryGroupAsArray.clone());
+                ((Category)categoryEntry.getValue()).getSiblingCategories().remove((Category)categoryEntry.getValue());
+            }
+        }
     }
 
     ///Getters & Setters

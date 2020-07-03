@@ -62,10 +62,10 @@ public class Primary {
                 exception.printStackTrace();
             }
         });
-        inputMenuItem.setOnAction(e -> {
-            interfaceManager.inputScene.display("Test Title","Test Text Field Label: ");});
-        errorMenuItem.setOnAction(e -> {
-            interfaceManager.errorScene.display("Default Error", "This is the default error, I should loop around and not fit on one line. Hello I hope I work.");});
+//        inputMenuItem.setOnAction(e -> {
+//            interfaceManager.inputScene.display("Test Title","Test Text Field Label: ");});
+//        errorMenuItem.setOnAction(e -> {
+//            interfaceManager.errorScene.display("Default Error", "This is the default error, I should loop around and not fit on one line. Hello I hope I work.");});
 
         //scrollPane Settings
         ScrollPane scrollPane = new ScrollPane();

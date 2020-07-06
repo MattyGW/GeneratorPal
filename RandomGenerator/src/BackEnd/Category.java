@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Category {
     /*
     Fields
-    - Keeps a reference to its parent csvData object.
+    - Keeps a reference to its parent tsvData object.
     - Keeps a list of all item objects that are associated with this category.
     - Keeps track of its own name and weight.
     Methods
@@ -14,18 +14,18 @@ public class Category {
     - addItem()
     - toString() //this needs to be written
      */
-    private CSVData csvData;        //Reference
+    private TSVData tsvData;        //Reference
     private ArrayList<Item> items;  //Reference
     private ArrayList<Category> siblingCategories;
     private String name;
     private int weight;
 
     /// Constructor
-    public Category(String name, CSVData csvData){
+    public Category(String name, TSVData tsvData){
         this.siblingCategories = new ArrayList<>(); //Need to be sorted
         System.out.println("Constructing Category: " + name);
         this.name = name;
-        this.csvData = csvData;
+        this.tsvData = tsvData;
         this.items = new ArrayList();
         weight = 10;
     }
@@ -37,11 +37,11 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
-    public CSVData getCsvData() {
-        return csvData;
+    public TSVData getCsvData() {
+        return tsvData;
     }
-    public void setCsvData(CSVData csvData) {
-        this.csvData = csvData;
+    public void setCsvData(TSVData tsvData) {
+        this.tsvData = tsvData;
     }
     public ArrayList<Item> getItems() {
         return items;

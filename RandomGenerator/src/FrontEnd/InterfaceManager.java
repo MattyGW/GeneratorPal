@@ -1,7 +1,7 @@
 package FrontEnd;
 
 import Assets.AssetManager;
-import BackEnd.CSVData;
+import BackEnd.TSVData;
 import BackEnd.Category;
 import BackEnd.Item;
 import javafx.geometry.Insets;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 
 public class InterfaceManager {
     //Item Data
-    HashMap<String, Object>     allCSVDatas;
+    HashMap<String, Object>     allTSVDatas;
     HashMap<String, Category>   allCategorys;
     HashMap<String, Item>       allItems;
     HashMap<String,Generator>   allGenerators;
@@ -41,7 +41,7 @@ public class InterfaceManager {
     private InterfaceManager(){
         System.out.println("Constructing InterfaceManager");
         //Initialise Data Storage
-        allCSVDatas = new HashMap<>();
+        allTSVDatas = new HashMap<>();
         allCategorys = new HashMap<>();
         allItems = new HashMap<>();
         allGenerators = new HashMap<>();
@@ -153,15 +153,15 @@ public class InterfaceManager {
         }
     }
 
-    public void inputCSV() throws Exception {
+    public void inputTSV() throws Exception {
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(primaryScene.getStage());
-        CSVData csvData = new CSVData(selectedFile.getName(),selectedFile);
-        allCSVDatas.put(csvData.getName(),csvData);
-        for (Category category: csvData.getItemCategories()){
+        TSVData tsvData = new TSVData(selectedFile.getName(),selectedFile);
+        allTSVDatas.put(tsvData.getName(),tsvData);
+        for (Category category: tsvData.getItemCategories()){
             allCategorys.put(category.getName(),category);
         }
-        for (Item item: csvData.getItems()){
+        for (Item item: tsvData.getItems()){
             allItems.put(item.getName(),item);
         }
     }
@@ -171,11 +171,11 @@ public class InterfaceManager {
     }
 
     //Field Getters & Setters
-    public HashMap<String, Object> getAllCSVDatas() {
-        return allCSVDatas;
+    public HashMap<String, Object> getAllTSVDatas() {
+        return allTSVDatas;
     }
-    public void setAllCSVDatas(HashMap<String, Object> allCSVDatas) {
-        this.allCSVDatas = allCSVDatas;
+    public void setAllTSVDatas(HashMap<String, Object> allTSVDatas) {
+        this.allTSVDatas = allTSVDatas;
     }
     public HashMap<String, Category> getAllCategorys() {
         return allCategorys;

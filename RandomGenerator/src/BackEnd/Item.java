@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 /*
 Fields
-- Keeps a reference to its parent csvData object.
+- Keeps a reference to its parent tsvData object.
 - Keeps a list of all category objects this Item is associated with.
 - Keeps track of its own name, rules and description.
 Methods
@@ -21,13 +21,13 @@ Methods
  */
 public class Item {
     private ArrayList<Category>         itemCategory;
-    private CSVData                     csvData;
+    private TSVData                     tsvData;
     private String                      name;
     private String                      rules;
     private String                      description;
 
     /// Constructor
-    public Item(String name, String rules, String description, CSVData csvData) {
+    public Item(String name, String rules, String description, TSVData tsvData) {
         System.out.println("Constructing Item: " + name);
         //Assigning Personal Traits
         this.name = name;
@@ -35,7 +35,7 @@ public class Item {
         this.description = description;
         //Assigning Parent Objects
         this.itemCategory = new ArrayList<>();
-        this.csvData = csvData;
+        this.tsvData = tsvData;
     }
 
     ///Getters and Setters
@@ -63,11 +63,11 @@ public class Item {
     public void setItemCategory(ArrayList itemCategory) {
         this.itemCategory = itemCategory;
     }
-    public CSVData getCSVData() {
-        return csvData;
+    public TSVData getTSVData() {
+        return tsvData;
     }
-    public void setCSVData(CSVData csvData) {
-        this.csvData = csvData;
+    public void setTSVData(TSVData tsvData) {
+        this.tsvData = tsvData;
     }
 
     ///Add Methods
@@ -98,14 +98,14 @@ public class Item {
         }
         /// Output
         System.out.println("Item: " + name);
-        System.out.println("From CSV: " + csvData.getName());
+        System.out.println("From TSV: " + tsvData.getName());
         System.out.println("Catagories: " + categoryNames);
         System.out.println("Rules: " + rules);
         System.out.println("Description: " + description);
         /// Return Value
         String[] returnValue = new String[6];
         returnValue[1] = ("Item: " + name);
-        returnValue[3] = ("From CSV: " + csvData.getName());
+        returnValue[3] = ("From TSV: " + tsvData.getName());
         returnValue[4] = ("Catagories: " + categoryNames);
         returnValue[5] = ("Rules: " + rules);
         returnValue[6] = ("Description: " + description);

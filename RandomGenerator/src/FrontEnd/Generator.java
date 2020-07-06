@@ -1,13 +1,11 @@
 package FrontEnd;
 
 import Assets.AssetManager;
-import BackEnd.CSVData;
+import BackEnd.TSVData;
 import BackEnd.Category;
 import BackEnd.Item;
-import com.sun.javafx.collections.MappingChange;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -17,8 +15,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.awt.*;
-import java.io.Console;
 import java.util.*;
 
 public class Generator {
@@ -33,7 +29,7 @@ public class Generator {
     String                      name;
     Integer                     count;
     Integer                     passCounter;
-    HashMap<String,Object>      selectedCSVDatas;
+    HashMap<String,Object>      selectedTSVDatas;
     HashMap<String,Object>      selectedCategories;
     HashMap<String,Integer>     recordedCategoriesWeights;
     HashMap<Item,Integer>       displayedItems;
@@ -45,7 +41,7 @@ public class Generator {
         this.name = name;
         this.count = 1;
         this.passCounter = 0;
-        this.selectedCSVDatas = new HashMap<String,Object>();
+        this.selectedTSVDatas = new HashMap<String,Object>();
         this.recordedCategoriesWeights = new HashMap<String,Integer>();
         this.selectedCategories = new HashMap<String,Object>();
         this.displayedItems = new HashMap<Item,Integer>();
@@ -68,10 +64,25 @@ public class Generator {
         //menuBar Settings
         MenuBar menuBar = new MenuBar();
 
-        Menu OptionsMenu = new Menu("Options");
-        menuBar.getMenus().add(OptionsMenu);
-        MenuItem generateItem = new MenuItem("Generate");
-        OptionsMenu.getItems().add(generateItem);
+        Menu fileMenu = new Menu("File");
+        menuBar.getMenus().add(fileMenu);
+
+        Menu editMenu = new Menu("Edit");
+        menuBar.getMenus().add(editMenu);
+
+        MenuItem saveItem = new MenuItem("Save Generator");
+        fileMenu.getItems().add(saveItem);
+        saveItem.setOnAction(e -> {
+            try {
+                assert true;
+//                interfaceManager.saveGanerator(this);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        MenuItem generateItem = new MenuItem("Generate Items");
+        fileMenu.getItems().add(generateItem);
         generateItem.setOnAction(e -> {
             try {
                 setupGenerator();
@@ -81,7 +92,7 @@ public class Generator {
         });
 
         MenuItem generateAmountItem = new MenuItem("Edit Amount Generated");
-        OptionsMenu.getItems().add(generateAmountItem);
+        fileMenu.getItems().add(generateAmountItem);
         generateAmountItem.setOnAction(e -> {
             try {
                 changeCount();
@@ -90,22 +101,18 @@ public class Generator {
             }
         });
 
-        Menu CSVsMenu = new Menu("CSVs");
-        menuBar.getMenus().add(CSVsMenu);
-        MenuItem csvSelectItem = new MenuItem("Edit Selected CSVs");
-        CSVsMenu.getItems().add(csvSelectItem);
-        csvSelectItem.setOnAction(e -> {
+        MenuItem tsvSelectItem = new MenuItem("Edit Selected TSV");
+        editMenu.getItems().add(tsvSelectItem);
+        tsvSelectItem.setOnAction(e -> {
             try {
-                selectCSVs();
+                selectTSVs();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
 
-        Menu CategoriesMenu = new Menu("Edit Categories");
-        menuBar.getMenus().add(CategoriesMenu);
         MenuItem categorySelectItem = new MenuItem("Edit Selected Categories");
-        CategoriesMenu.getItems().add(categorySelectItem);
+        editMenu.getItems().add(categorySelectItem);
         categorySelectItem.setOnAction(e -> {
             try {
                 selectCategories();
@@ -113,8 +120,9 @@ public class Generator {
                 ex.printStackTrace();
             }
         });
-        MenuItem categoryWeightItem = new MenuItem("Edit Category Weights");
-        CategoriesMenu.getItems().add(categoryWeightItem);
+
+        MenuItem categoryWeightItem = new MenuItem("Edit Selected Category Weights");
+        editMenu.getItems().add(categoryWeightItem);
         categoryWeightItem.setOnAction(e -> {
             try {
                 changeCategoryWeights();
@@ -122,6 +130,11 @@ public class Generator {
                 ex.printStackTrace();
             }
         });
+
+        Button generateButton = new Button("Generate");
+        generateButton.setPrefSize(250,25);
+        generateButton.setMaxSize(250,25);
+        generateButton.setMinSize(250,25);
 
         //scrollPane Settings
         ScrollPane scrollPane = new ScrollPane();
@@ -134,6 +147,7 @@ public class Generator {
 
         //Assignment Section
         mainBody.getChildren().add(menuBar);
+        mainBody.getChildren().add(generateButton);
         mainBody.getChildren().add(scrollPane);
     }
 
@@ -146,15 +160,15 @@ public class Generator {
     }
 
     //Selector Methods
-    public void selectCSVs(){
+    public void selectTSVs(){
         //call the selector window
-        interfaceManager.selectScene.display("Changing CSVs",(HashMap<String, Object>)interfaceManager.getAllCSVDatas(),selectedCSVDatas);
-        //Automatically Deselect any category from a csv deselected
+        interfaceManager.selectScene.display("Changing TSVs",(HashMap<String, Object>)interfaceManager.getAllTSVDatas(),selectedTSVDatas);
+        //Automatically Deselect any category from a tsv deselected
         if (interfaceManager.getSelectScene().getUpdateList()) {
             Iterator iterator = selectedCategories.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry aSelectedCategory = (Map.Entry) iterator.next();
-                if (!(selectedCSVDatas.containsKey(((Category) (aSelectedCategory.getValue())).getCsvData().getName()))) {
+                if (!(selectedTSVDatas.containsKey(((Category) (aSelectedCategory.getValue())).getCsvData().getName()))) {
                     selectedCategories.remove((String) aSelectedCategory.getKey());
                 }
             }
@@ -163,10 +177,10 @@ public class Generator {
     public void selectCategories(){
         //prepare the HashMaps to send to the selector window
         HashMap<String,Object> allOptions = new HashMap<>();
-        Iterator iterator = selectedCSVDatas.entrySet().iterator();
+        Iterator iterator = selectedTSVDatas.entrySet().iterator();
         while (iterator.hasNext()){
-            Map.Entry csvEntry = (Map.Entry)iterator.next();
-            for (Category category: ((CSVData) csvEntry.getValue()).getItemCategories()){
+            Map.Entry tsvEntry = (Map.Entry)iterator.next();
+            for (Category category: ((TSVData) tsvEntry.getValue()).getItemCategories()){
                 allOptions.put(category.getName(), category);
             }
         }
@@ -313,16 +327,28 @@ public class Generator {
             Map.Entry itemEntry = (Map.Entry) iterator.next();
 
             HBox itemSlot = new HBox();
+            itemSlot.setSpacing(1);
+            itemSlot.setPadding(new Insets(1,1,1,1));
+            itemSlot.setBackground(new Background((new BackgroundFill(
+                    Color.rgb(60,60,60),CornerRadii.EMPTY, Insets.EMPTY))));
 
             Label itemNameLabel = new Label(((Item) itemEntry.getKey()).getName());
-            itemNameLabel.setMaxSize(interfaceManager.getScreenSize().width / 12, 20);
+            itemNameLabel.setPrefSize(140,20);
+            itemNameLabel.setBackground(new Background((new BackgroundFill(
+                    Color.rgb(220,220,220),CornerRadii.EMPTY, Insets.EMPTY))));
+            itemNameLabel.setPadding(new Insets(0,2,0,2));
 
-            Label itemCountLabel = new Label(("x" +((Integer) itemEntry.getValue()).toString()));
-            itemCountLabel.setMaxSize(20, 20);
+            Label itemCountLabel = new Label(("Count : " +((Integer) itemEntry.getValue()).toString()));
+            itemCountLabel.setPrefSize(70,20);
+            itemCountLabel.setBackground(new Background((new BackgroundFill(
+                    Color.rgb(220,220,220),CornerRadii.EMPTY, Insets.EMPTY))));
+            itemCountLabel.setPadding(new Insets(0,2,0,2));
 
             Button itemButton = new Button();
             itemButton.setPrefSize(itemButton.getMaxWidth(), itemButton.getMaxWidth());
-            itemButton.setMaxSize(20, 20);
+            itemButton.setPrefSize(19, 19);
+            itemButton.setMinSize(19, 19);
+            itemButton.setMaxSize(19, 19);
 
             scrollPaneBody.getChildren().add(itemSlot);
             itemSlot.getChildren().add(itemNameLabel);
@@ -415,12 +441,12 @@ public class Generator {
         this.count = count;
     }
 
-    public HashMap<String, Object> getSelectedCSVDatas() {
-        return selectedCSVDatas;
+    public HashMap<String, Object> getSelectedTSVDatas() {
+        return selectedTSVDatas;
     }
 
-    public void setSelectedCSVDatas(HashMap<String, Object> selectedCSVDatas) {
-        this.selectedCSVDatas = selectedCSVDatas;
+    public void setSelectedTSVDatas(HashMap<String, Object> selectedTSVDatas) {
+        this.selectedTSVDatas = selectedTSVDatas;
     }
 
     public HashMap<String, Integer> getRecordedCategoriesWeights() {

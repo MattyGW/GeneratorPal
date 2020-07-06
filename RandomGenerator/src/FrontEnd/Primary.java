@@ -30,7 +30,7 @@ public class Primary {
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
         MenuItem newGeneratorMenuItem = new MenuItem("New Generator");
-        MenuItem newCSVDataMenuItem = new MenuItem("Import CSVData");
+        MenuItem newTSVDataMenuItem = new MenuItem("Import TSVData");
         Menu editMenu = new Menu("Edit");
         Menu viewMenu = new Menu("View");
         Menu testMenu = new Menu("Test");
@@ -39,7 +39,7 @@ public class Primary {
         MenuItem errorMenuItem = new MenuItem("Error Window");
         menuBar.getMenus().add(fileMenu);
         fileMenu.getItems().add(newGeneratorMenuItem);
-        fileMenu.getItems().add(newCSVDataMenuItem);
+        fileMenu.getItems().add(newTSVDataMenuItem);
         menuBar.getMenus().add(editMenu);
         menuBar.getMenus().add(viewMenu);
         menuBar.getMenus().add(testMenu);
@@ -55,9 +55,9 @@ public class Primary {
                 exception.printStackTrace();
             }
         });
-        newCSVDataMenuItem.setOnAction(e -> {
+        newTSVDataMenuItem.setOnAction(e -> {
             try {
-                interfaceManager.inputCSV();
+                interfaceManager.inputTSV();
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

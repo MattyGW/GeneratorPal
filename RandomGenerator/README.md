@@ -1,1 +1,1 @@
-RandomGenerator
+RandomActor

@@ -1,4 +1,7 @@
-package BackEnd;
+package ActorObjects;
+
+import ActorObjects.Item;
+import ActorObjects.Tag;
 
 import javax.lang.model.element.Element;
 import java.io.*;
@@ -9,23 +12,23 @@ import static com.sun.javafx.fxml.expression.Expression.not;
 public class TSVData {
     /*
     Fields
-    - Keeps a list of all category objects associated with this TSVData.
+    - Keeps a list of all tag objects associated with this TSVData.
     - Keeps a list of all Item objects associated with this TSVData.
     - Keeps track of its own name.
     Methods
     - Constructor
     - Getters & Setters
-    - addCategory()
+    - addTag()
     - addItem()
     - toString() //This needs to be written
-    - randomgenerator Methods
+    - randomactor Methods
     - - getRandomItem()
-    - - getRandomCategory()
+    - - getRandomTag()
     - - prepremainingCategories()
      */
     ///Personal Traits
     private String name;
-    private ArrayList<Category> itemCategories;
+    private ArrayList<Tag> itemCategories;
     private ArrayList<Item> items;
 
     /// Constructor
@@ -33,11 +36,11 @@ public class TSVData {
     public TSVData(String name, File file) throws Exception {
         System.out.println("Constructing TSVData: " + name);
         this.name = name;
-        this.itemCategories = new ArrayList<Category>();
+        this.itemCategories = new ArrayList<Tag>();
         this.items = new ArrayList<Item>();
-        //Data for category groups
+        //Data for tag groups
         Integer groupCounter = 0;
-        ArrayList<HashMap<String, Category>> allCategoryGroups = new ArrayList<>();
+        ArrayList<HashMap<String, Tag>> allTagGroups = new ArrayList<>();
         ///Importing data from a tsv
         BufferedReader tsvReader;
         String currentRow = null;
@@ -56,28 +59,28 @@ public class TSVData {
                 throw new Exception("The TSV file has less then 3 Columns it needs a name, rules and description roll");
             }
             else if (rowLength == 3){
-                Category category = new Category("default", this);
+                Tag tag = new Tag("default", this);
                 Item item = new Item(elements[0], elements[1], elements[2], this);
-                category.addItem(item);
-                item.addCategory(category);
+                tag.addItem(item);
+                item.addTag(tag);
                 this.addItem(item);
-                this.addCategory(category);
+                this.addTag(tag);
             }
             else { // happens when rowlength is > 3
                 Item item = new Item(elements[0], elements[rowLength-2], elements[rowLength-1], this);
                 this.addItem(item);
                 for (int i = 1; i < rowLength-2; i++){
-                    Category category = cautionedCategoryCreation(elements[i]);
-                    System.out.println("There is " + allCategoryGroups.size() + " category groups, the row length is "+ rowLength);
-                    if (allCategoryGroups.size() < (rowLength-3)){
-                        System.out.println(" - Adding another category group.");
-                        HashMap<String,Category> categoryGroup = new HashMap<>();
-                        allCategoryGroups.add(categoryGroup);
+                    Tag tag = cautionedTagCreation(elements[i]);
+                    System.out.println("There is " + allTagGroups.size() + " tag groups, the row length is "+ rowLength);
+                    if (allTagGroups.size() < (rowLength-3)){
+                        System.out.println(" - Adding another tag group.");
+                        HashMap<String,Tag> tagGroup = new HashMap<>();
+                        allTagGroups.add(tagGroup);
                     }
-                    //Stuff for category groups
-                    allCategoryGroups.get(i-1).put(category.getName(),category);
-                    category.addItem(item);
-                    item.addCategory(category);
+                    //Stuff for tag groups
+                    allTagGroups.get(i-1).put(tag.getName(),tag);
+                    tag.addItem(item);
+                    item.addTag(tag);
                     }
             }
             currentRow = tsvReader.readLine();
@@ -89,25 +92,25 @@ public class TSVData {
             System.out.println("Unable to close file" + file);
             throw new Exception("Unable to close file" + file);
         }
-        fillSiblingCategories(allCategoryGroups);
+        fillSiblingCategories(allTagGroups);
     }
 
-    public void fillSiblingCategories(ArrayList<HashMap<String, Category>> allCategoryGroups){
+    public void fillSiblingCategories(ArrayList<HashMap<String, Tag>> allTagGroups){
         System.out.println("Filling Sibling Categories");
-        System.out.println(allCategoryGroups);
-        for (HashMap<String,Category> categoryGroup: allCategoryGroups){
-            System.out.println(categoryGroup);
-            Iterator iterator = categoryGroup.entrySet().iterator();
-            ArrayList<Category> categoryGroupAsArray = new ArrayList<>();
+        System.out.println(allTagGroups);
+        for (HashMap<String,Tag> tagGroup: allTagGroups){
+            System.out.println(tagGroup);
+            Iterator iterator = tagGroup.entrySet().iterator();
+            ArrayList<Tag> tagGroupAsArray = new ArrayList<>();
             while (iterator.hasNext()) {
-                Map.Entry categoryEntry = (Map.Entry) iterator.next();
-                categoryGroupAsArray.add((Category)categoryEntry.getValue());
+                Map.Entry tagEntry = (Map.Entry) iterator.next();
+                tagGroupAsArray.add((Tag)tagEntry.getValue());
             }
-            iterator = categoryGroup.entrySet().iterator();
+            iterator = tagGroup.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry categoryEntry = (Map.Entry) iterator.next();
-                ((Category)categoryEntry.getValue()).setSiblingCategories((ArrayList) categoryGroupAsArray.clone());
-                ((Category)categoryEntry.getValue()).getSiblingCategories().remove((Category)categoryEntry.getValue());
+                Map.Entry tagEntry = (Map.Entry) iterator.next();
+                ((Tag)tagEntry.getValue()).setSiblingCategories((ArrayList) tagGroupAsArray.clone());
+                ((Tag)tagEntry.getValue()).getSiblingCategories().remove((Tag)tagEntry.getValue());
             }
         }
     }
@@ -119,11 +122,11 @@ public class TSVData {
     public void setName(String name) {
         this.name = name;
     }
-    public ArrayList<Category> getItemCategories() {
+    public ArrayList<Tag> getItemCategories() {
         return itemCategories;
     }
-    public void setItemCategorys(ArrayList<Category> itemCategorys) {
-        this.itemCategories = itemCategorys;
+    public void setItemTags(ArrayList<Tag> itemTags) {
+        this.itemCategories = itemTags;
     }
     public ArrayList<Item> getItems() {
         return items;
@@ -136,81 +139,81 @@ public class TSVData {
     public void addItem(Item item){
         items.add(item);
     }
-    public void addCategory(Category category){
-        itemCategories.add(category);
+    public void addTag(Tag tag){
+        itemCategories.add(tag);
     }
 
     ///Misc Methods
-    public Category cautionedCategoryCreation(String categoryName){
-        for (Category category : itemCategories){
-            if (category.getName().equals(categoryName)){
-                return category;
+    public Tag cautionedTagCreation(String tagName){
+        for (Tag tag : itemCategories){
+            if (tag.getName().equals(tagName)){
+                return tag;
             }
         }
-        Category category = new Category(categoryName,this);
-        this.addCategory(category);
-        return category;
+        Tag tag = new Tag(tagName,this);
+        this.addTag(tag);
+        return tag;
     }
 
-    ///Random Generator
+    ///Random Actor
     public Item getRandomItem() throws Exception {
-        return getRandomCategory(this.getItems(), null, this.getItemCategories());
+        return getRandomTag(this.getItems(), null, this.getItemCategories());
     }
 
-    public Item getRandomCategory(ArrayList<Item> allItems, ArrayList<Category> mustCategories, ArrayList<Category> remainingCategories) throws Exception {
+    public Item getRandomTag(ArrayList<Item> allItems, ArrayList<Tag> mustCategories, ArrayList<Tag> remainingCategories) throws Exception {
         //Step One (Setting up the total weight of the rePrimarying Categories)
         int currentWeight = 0;
-        for (Category category: remainingCategories){
-            currentWeight += category.getWeight();
+        for (Tag tag: remainingCategories){
+            currentWeight += tag.getWeight();
         }
         //Step Two (Select create random number based on currentWeight)
         Random random = new Random();
         int randomNumber = random.nextInt(currentWeight);
-        //Step Four (Select a random category)
-        for (Category category : remainingCategories){
-            currentWeight =- category.getWeight();
+        //Step Four (Select a random tag)
+        for (Tag tag : remainingCategories){
+            currentWeight =- tag.getWeight();
             if (currentWeight > randomNumber){
-                mustCategories.add(category);
+                mustCategories.add(tag);
                 return prepRaPrimaryingCategories(this.getItems(), mustCategories);
             }
             else if (currentWeight < 0 ){
-                throw new Exception("A category wasn't chosen for generating a category.");
+                throw new Exception("A tag wasn't chosen for generating a tag.");
             }
         }
         throw new Exception("This should ever be thrown.");
     }
 
-    public Item prepRaPrimaryingCategories(ArrayList<Item> allItems, ArrayList<Category> mustCategories) throws Exception {
+    public Item prepRaPrimaryingCategories(ArrayList<Item> allItems, ArrayList<Tag> mustCategories) throws Exception {
         //Go through the items and remove items that don't have must categories
         ArrayList<Item> refactoredItemList = allItems;
-        ArrayList<Category> refactoredCategoryList = new ArrayList<Category>();
+        ArrayList<Tag> refactoredTagList = new ArrayList<Tag>();
         for (Item item : allItems) {
-            for (Category category : mustCategories) {
-                if (!(item.getItemCategory().contains(category))) {
+            for (Tag tag : mustCategories) {
+                if (!(item.getItemTag().contains(tag))) {
                     refactoredItemList.remove(item);
                     break;
                 }
             }
         }
-        //Go through the items and create a new category list.
+        //Go through the items and create a new tag list.
         for (Item item : refactoredItemList) {
-            for (Category category : item.getItemCategory()) {
-                if (!(refactoredCategoryList.contains(category))) {
-                    refactoredCategoryList.add(category);
+            for (Tag tag : item.getItemTag()) {
+                if (!(refactoredTagList.contains(tag))) {
+                    refactoredTagList.add(tag);
                 }
             }
         }
-        //Go through the category list removing the must categorys
-        for (Category category : mustCategories) {
-            if (refactoredCategoryList.contains(category)) {
-                refactoredCategoryList.remove(category);
+        //Go through the tag list removing the must tags
+        for (Tag tag : mustCategories) {
+            if (refactoredTagList.contains(tag)) {
+                refactoredTagList.remove(tag);
             }
         }
-        //Check if refactored Category List is empty
-        if (refactoredCategoryList.isEmpty()) {
+        //Check if refactored Tag List is empty
+        if (refactoredTagList.isEmpty()) {
             return generateRandomItem(refactoredItemList);
         }
-        return getRandomCategory(refactoredItemList, mustCategories, refactoredCategoryList);
+        return getRandomTag(refactoredItemList, mustCategories, refactoredTagList);
     }
 
     public Item generateRandomItem(ArrayList<Item> items) throws Exception {

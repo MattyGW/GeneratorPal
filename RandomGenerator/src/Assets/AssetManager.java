@@ -1,6 +1,6 @@
 package Assets;
 
-import FrontEnd.InterfaceManager;
+import DisplayClasses.InterfaceManager;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

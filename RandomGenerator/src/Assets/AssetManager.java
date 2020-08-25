@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class AssetManager {
+    private  static AssetManager assetManager;
     String path = (new File("").getAbsolutePath());
 
     public AssetManager(InterfaceManager interfaceManager){
@@ -28,5 +29,13 @@ public class AssetManager {
         }
         System.out.println("This should ever be printed. From getImageView");
         return null;
+    }
+
+    public static AssetManager getAssetManager() {
+        return assetManager;
+    }
+
+    public static void setAssetManager(AssetManager assetManager) {
+        AssetManager.assetManager = assetManager;
     }
 }

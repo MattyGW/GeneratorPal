@@ -2,7 +2,8 @@ package Styling;
 
 import java.awt.*;
 
-public class styleManager {
+public class StyleManager {
+    public static StyleManager styleManager;
     /*
     * Assign all CSS IDS
     * Assign all dimensions
@@ -12,5 +13,13 @@ public class styleManager {
     Integer secondaryBodyHeight = mainBodyHeight/3;
     Integer secondaryBodyWidth = mainBodyWidth/4;
 
+    public StyleManager(){}
 
+    public static StyleManager getStyleManager() {
+        return styleManager;
+    }
+
+    public static void setStyleManager(StyleManager styleManager) {
+        StyleManager.styleManager = styleManager;
+    }
 }

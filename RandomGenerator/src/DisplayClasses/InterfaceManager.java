@@ -1,9 +1,9 @@
 package DisplayClasses;
 
 import Assets.AssetManager;
-import ActorObjects.TSVData;
-import ActorObjects.Tag;
-import ActorObjects.Item;
+import GeneratorPalOld.ItemDataset;
+import GeneratorPalOld.Tag;
+import GeneratorPalOld.Item;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -156,7 +156,7 @@ public class InterfaceManager {
     public void inputTSV() throws Exception {
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(primaryScene.getStage());
-        TSVData tsvData = new TSVData(selectedFile.getName(),selectedFile);
+        ItemDataset tsvData = new ItemDataset(selectedFile.getName(),selectedFile);
         allTSVDatas.put(tsvData.getName(),tsvData);
         for (Tag tag: tsvData.getItemCategories()){
             allTags.put(tag.getName(),tag);

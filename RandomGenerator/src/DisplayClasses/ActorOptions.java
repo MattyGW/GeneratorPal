@@ -20,9 +20,6 @@ import java.util.Map;
 
 
 public class ActorOptions {
-    ///References
-    InterfaceManager interfaceManager;
-    Stage stage;
     //Parts of the Selector
     VBox scrollPaneBody;
     //Data tracked the Selector

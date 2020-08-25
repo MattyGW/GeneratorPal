@@ -1,9 +1,9 @@
 package DisplayClasses;
 
 import Assets.AssetManager;
-import ActorObjects.TSVData;
-import ActorObjects.Tag;
-import ActorObjects.Item;
+import GeneratorPalOld.ItemDataset;
+import GeneratorPalOld.Tag;
+import GeneratorPalOld.Item;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -180,7 +180,7 @@ public class Actor {
         Iterator iterator = selectedTSVDatas.entrySet().iterator();
         while (iterator.hasNext()){
             Map.Entry tsvEntry = (Map.Entry)iterator.next();
-            for (Tag tag: ((TSVData) tsvEntry.getValue()).getItemCategories()){
+            for (Tag tag: ((ItemDataset) tsvEntry.getValue()).getItemCategories()){
                 allOptions.put(tag.getName(), tag);
             }
         }
@@ -298,7 +298,7 @@ public class Actor {
         while (iterator.hasNext()) {
             Map.Entry aRemainingItem = (Map.Entry) iterator.next();
             Item item = (Item) aRemainingItem.getValue();
-            ////Go through the selected categories siblingCategories
+            ////Go through the selected categories tagGroup
             for (Tag siblingTag : selectedTag.getSiblingCategories()) {
                 //Remove items that contain a sibling tag
                 if (item.getItemTag().contains(siblingTag)) {

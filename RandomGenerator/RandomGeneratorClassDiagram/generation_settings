@@ -81,10 +81,10 @@ ${members}};
 ${inlines}
 "
   cpp_default_enum_decl "${comment}enum ${name} {
-${items}};
+${options}};
 "
   cpp_default_enumclass_decl "${comment}enum class ${name} {
-${items}};
+${options}};
 "
   cpp_default_typedef_decl "${comment}typedef ${type} ${name};
 "cpp_default_template_typedef_decl "${comment}${template}using ${name} = ${inherit};
@@ -95,7 +95,7 @@ ${items}};
 " // multiplicity * a..b
   "    ${comment}${static}${thread_local}${mutable}${volatile}${const}${type} ${name}${multiplicity}${value};
 " // multiplicity [..]
-  cpp_default_enum_item_declaration "  ${name}${value},${comment}"
+  cpp_default_enum_option_declaration "  ${name}${value},${comment}"
   cpp_association_aggregation_declaration
     "    ${comment}${static}${thread_local}${mutable}${volatile}${const}${type} * ${name}${value};
 " // multiplicity 1
@@ -130,7 +130,7 @@ ${members}}
 ${members}}
 "
   java5_default_enum_decl "${comment}${@}${visibility}${static}${final}${abstract}enum ${name}${implements} {
-${items};
+${options};
 ${members}}
 "
   java_default_enum_decl "${comment}${@}${visibility}${static}$final class ${name} {
@@ -156,8 +156,8 @@ ${cases}    default: throw new Error();
 " // multiplicity * a..b
   "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type}${multiplicity} ${name}${value};
 " // multiplicity N
-  java5_default_enum_item_declaration "  ${@}${name}${value},${comment}"
-  java_default_enum_item_declaration "  ${comment}${@}public static final int _${name}${value};
+  java5_default_enum_option_declaration "  ${@}${name}${value},${comment}"
+  java_default_enum_option_declaration "  ${comment}${@}public static final int _${name}${value};
 public static final ${class} ${name} = new ${class}(_${name});
 "
   java_default_enum_case "    case _${name}: return ${name};
@@ -186,7 +186,7 @@ ${definition}
 ${members}}
 "
   php_default_enum_decl "${comment}${visibility}final class ${name} {
-${items}}
+${options}}
 "
   php_default_external_class_decl "${name}"
   php_default_interface_decl "${comment}interface ${name}${extends} {
@@ -197,7 +197,7 @@ ${members}}
 "
   php_default_attribute_declaration "  ${comment}${visibility}${const}${static}${var}${name}${value};
 "
-  php_default_enum_item_decl "  const ${name}${value};${comment}
+  php_default_enum_option_decl "  const ${name}${value};${comment}
 "
   php_default_relation_declaration"  ${comment}${visibility}${const}${static}${var}${name}${value};
 "
@@ -223,7 +223,7 @@ ${docstring}${members}
 " // multiplicity 1
   "${comment}${self}${name} = ${stereotype}()
 " // multiplicity != 1
-  python_default_enum_item_decl "${comment}${self}${name} = ${value}
+  python_default_enum_option_decl "${comment}${self}${name} = ${value}
 "
   python_default_relation_declaration"${comment}${self}${name} = ${value}
 " // multiplicity 1
@@ -270,7 +270,7 @@ ${members}};
 ${members}};
 "
   idl_default_enum_decl "${comment}enum ${name} {
-${items}};
+${options}};
 "
   idl_default_external_class_decl "${name}
 #include \"${name}.idl\"
@@ -293,8 +293,8 @@ ${items}};
 " // multiplicity * a..b
   "  ${comment}const ${stereotype}<${type},${multiplicity}> ${name}${value};
 " // multiplicity N
-  idl_default_enum_item_declaration "  ${name},${comment}"
-  idl_default_union_item_declaration "  ${comment}case ${case} : ${readonly}${type} ${name};" // multiplicity 1
+  idl_default_enum_option_declaration "  ${name},${comment}"
+  idl_default_union_option_declaration "  ${comment}case ${case} : ${readonly}${type} ${name};" // multiplicity 1
   "  ${comment}case ${case} : ${readonly}${stereotype}<${type}> ${name};" // multiplicity * a..b
   "  ${comment}case ${case} : ${readonly}${stereotype}<${type},${multiplicity}> ${name};" // multiplicity N
   idl_association_aggregation_declaration

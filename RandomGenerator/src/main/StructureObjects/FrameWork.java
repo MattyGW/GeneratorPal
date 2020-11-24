@@ -3,7 +3,7 @@ package main.StructureObjects;
 
 import java.util.ArrayList;
 
-public class Main {
+public class FrameWork {
     //Optional fields
     public ArrayList<Project> projects;
 

@@ -1,8 +1,9 @@
-package GeneratorPalTests;
+package GeneratorPalTests.ActorObjectTests;
 
 import org.junit.jupiter.api.Test;
 
-public class GeneratorPalTest {
+public class ActorTest {
+
     @Test
     void name() {
     }

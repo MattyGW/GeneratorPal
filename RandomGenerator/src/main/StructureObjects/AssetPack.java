@@ -9,7 +9,9 @@ import main.FilterObjects.Variable;
 import java.util.HashSet;
 
 public class AssetPack {
+    //Required Fields
     private String name;
+    //Optional Fields
     private HashSet<Tag> tags;
     private HashSet<Variable> variables;
     private HashSet<TagGroup> tagGroups;

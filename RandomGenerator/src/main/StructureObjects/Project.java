@@ -33,8 +33,11 @@ public class Project{
     }
 
     //Primary Methods
-    public Actor createActor(){return null;}
-    public Actor importActor(){return null;}
+    public Actor createSelector(){return null;}
+    public Actor importSelector(){return null;}
+
+    public Actor createGenerator(){return null;}
+    public Actor importGenerator(){return null;}
 
     public AssetPack createAssetPack(){return null;}
     public AssetPack importAssetPack(){return null;}

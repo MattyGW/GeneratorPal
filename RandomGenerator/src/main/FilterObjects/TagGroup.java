@@ -10,6 +10,29 @@ public class TagGroup extends FilterObject {
     private HashSet<Tag> tags;
     private HashSet<TagGroup> requiredTagGroups;
 
+    //Constructor
+    public TagGroup(String name, String description, AssetPack assetPack) {
+        super(name, description, assetPack);
+        this.tags = new HashSet<>();
+        this.requiredTagGroups = new HashSet<>();
+    }
+
+    //Secondary Methods
+    ///Getters and Setters
+    public HashSet<Tag> getTags() {
+        return tags;
+    }
+    public void setTags(HashSet<Tag> tags) {
+        this.tags = tags;
+    }
+    public HashSet<TagGroup> getRequiredTagGroups() {
+        return requiredTagGroups;
+    }
+    public void setRequiredTagGroups(HashSet<TagGroup> requiredTagGroups) {
+        this.requiredTagGroups = requiredTagGroups;
+    }
+
+
     //Old Stuff
 //    public TagGroup(String name, AssetPack assetPack){}
 //

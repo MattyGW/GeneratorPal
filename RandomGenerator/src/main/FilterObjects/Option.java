@@ -1,14 +1,39 @@
 package main.FilterObjects;
 
 import main.ActorObjects.Actor;
+import main.StructureObjects.AssetPack;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class Option extends FilterObject {
     //Optional fields
     private HashSet<Tag> tags;
     private Actor actor;
+
+    //Constructors
+    public Option(String name, String description, AssetPack assetPack) {
+        super(name, description, assetPack);
+        this.tags = new HashSet<>();
+        this.actor = null;
+    }
+
+    //Primary Methods
+    public boolean isActorOption(){return false;}
+
+    //Secondary Methods
+    ///Getters and Setters
+    public HashSet<Tag> getTags() {
+        return tags;
+    }
+    public void setTags(HashSet<Tag> tags) {
+        this.tags = tags;
+    }
+    public Actor getActor() {
+        return actor;
+    }
+    public void setActor(Actor actor) {
+        this.actor = actor;
+    }
 
 
     //old stuff

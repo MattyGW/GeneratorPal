@@ -8,6 +8,21 @@ public class Variable extends FilterObject {
     //Optional fields
     private HashMap<Tag, Integer> tagInteraction;
 
+    //Constructor
+    public Variable(String name, String description, AssetPack assetPack) {
+        super(name, description, assetPack);
+        this.tagInteraction = new HashMap<>();
+    }
+
+    //Secondary Methods
+    ///Getters and Setters
+    public HashMap<Tag, Integer> getTagInteraction() {
+        return tagInteraction;
+    }
+    public void setTagInteraction(HashMap<Tag, Integer> tagInteraction) {
+        this.tagInteraction = tagInteraction;
+    }
+    
     //Old stuff
 //    public Variable(String name, AssetPack assetPack){}
 //

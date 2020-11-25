@@ -1,11 +1,27 @@
 package main.StructureObjects;
 
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class FrameWork {
     //Optional fields
-    public ArrayList<Project> projects;
+    private ArrayList<Project> projects;
+
+    //Primary Methods
+    public static Project createProject(String name) {return null;}
+    public static Project importProject(File file) {return null;}
+
+    //Secondary Methods
+    ///Getters and Setters
+    public ArrayList<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(ArrayList<Project> projects) {
+        this.projects = projects;
+    }
+
 
 //    //Old Stuff
 //    //Iteration Mark

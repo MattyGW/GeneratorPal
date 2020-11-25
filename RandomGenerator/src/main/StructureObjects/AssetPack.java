@@ -16,6 +16,7 @@ public class AssetPack {
     private HashSet<Option> options;
     private HashSet<Actor> actors;
 
+    //Constructors
     public AssetPack(String name) {
         this.name = name;
         this.tags = new HashSet<>();
@@ -24,6 +25,46 @@ public class AssetPack {
         this.options = new HashSet<>();
         this.actors = new HashSet<>();
     }
+
+    //Secondary Methods
+    //Getters and Setters
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public HashSet<Tag> getTags() {
+        return tags;
+    }
+    public void setTags(HashSet<Tag> tags) {
+        this.tags = tags;
+    }
+    public HashSet<Variable> getVariables() {
+        return variables;
+    }
+    public void setVariables(HashSet<Variable> variables) {
+        this.variables = variables;
+    }
+    public HashSet<TagGroup> getTagGroups() {
+        return tagGroups;
+    }
+    public void setTagGroups(HashSet<TagGroup> tagGroups) {
+        this.tagGroups = tagGroups;
+    }
+    public HashSet<Option> getOptions() {
+        return options;
+    }
+    public void setOptions(HashSet<Option> options) {
+        this.options = options;
+    }
+    public HashSet<Actor> getActors() {
+        return actors;
+    }
+    public void setActors(HashSet<Actor> actors) {
+        this.actors = actors;
+    }
+
 
     //
 //    public HashMap<String, TagGroup> getActors(){}

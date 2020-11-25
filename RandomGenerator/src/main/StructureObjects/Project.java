@@ -20,6 +20,7 @@ public class Project{
     private HashSet<TagGroup> tagGroups;
     private HashSet<Variable> variables;
 
+    //Constructors
     public Project(String name) {
         this.name = name;
         this.fileAddress = null;
@@ -31,6 +32,76 @@ public class Project{
         this.variables = new HashSet<>();
     }
 
+    //Primary Methods
+    public Actor createActor(){return null;}
+    public Actor importActor(){return null;}
+
+    public AssetPack createAssetPack(){return null;}
+    public AssetPack importAssetPack(){return null;}
+
+    public Tag createTag(){return null;}
+    public Tag importTag(){return null;}
+
+    public Variable createVariable(){return null;}
+    public Variable importVariable(){return null;}
+
+    public TagGroup createTagGroup(){return null;}
+    public TagGroup importTagGroup(){return null;}
+
+    public Option createOption(){return null;}
+    public Option importOption(){return null;}
+
+    //Secondary Methods
+    ///Getters & Setters
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getFileAddress() {
+        return fileAddress;
+    }
+    public void setFileAddress(String fileAddress) {
+        this.fileAddress = fileAddress;
+    }
+    public HashSet<AssetPack> getAssetPacks() {
+        return assetPacks;
+    }
+    public void setAssetPacks(HashSet<AssetPack> assetPacks) {
+        this.assetPacks = assetPacks;
+    }
+    public HashSet<Actor> getActors() {
+        return actors;
+    }
+    public void setActors(HashSet<Actor> actors) {
+        this.actors = actors;
+    }
+    public HashSet<Option> getOptions() {
+        return options;
+    }
+    public void setOptions(HashSet<Option> options) {
+        this.options = options;
+    }
+    public HashSet<Tag> getTags() {
+        return tags;
+    }
+    public void setTags(HashSet<Tag> tags) {
+        this.tags = tags;
+    }
+    public HashSet<TagGroup> getTagGroups() {
+        return tagGroups;
+    }
+    public void setTagGroups(HashSet<TagGroup> tagGroups) {
+        this.tagGroups = tagGroups;
+    }
+    public HashSet<Variable> getVariables() {
+        return variables;
+    }
+    public void setVariables(HashSet<Variable> variables) {
+        this.variables = variables;
+    }
+    
     //
 //    public Project(String name) {
 //        super(name);

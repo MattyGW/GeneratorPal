@@ -14,6 +14,52 @@ public abstract class Actor {
     private Boolean localisedVariables;
     private HashMap<Variable, Integer> variables;
 
+    //Constructor
+    public Actor(String name, Project project, AssetPack assetPack) {
+        this.name = name;
+        this.project = project;
+        this.assetPack = assetPack;
+        this.localisedVariables = false;
+        this.variables = new HashMap<>();
+    }
+
+    //Primary Methods
+    public void run(){}
+
+    //secondary Methods
+    ///Getters & Setters
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public Project getProject() {
+        return project;
+    }
+    public void setProject(Project project) {
+        this.project = project;
+    }
+    public AssetPack getAssetPack() {
+        return assetPack;
+    }
+    public void setAssetPack(AssetPack assetPack) {
+        this.assetPack = assetPack;
+    }
+    public Boolean getLocalisedVariables() {
+        return localisedVariables;
+    }
+    public void setLocalisedVariables(Boolean localisedVariables) {
+        this.localisedVariables = localisedVariables;
+    }
+    public HashMap<Variable, Integer> getVariables() {
+        return variables;
+    }
+    public void setVariables(HashMap<Variable, Integer> variables) {
+        this.variables = variables;
+    }
+
+
 //    //Old Stuff
 //    public Actor(){}
 //

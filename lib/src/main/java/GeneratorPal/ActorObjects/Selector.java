@@ -1,13 +1,11 @@
-package main.ActorObjects;
-
-import javafx.util.Pair;
-import main.FilterObjects.Option;
-import main.FilterObjects.Tag;
-import main.StructureObjects.AssetPack;
-import main.StructureObjects.Project;
+package GeneratorPal.ActorObjects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import GeneratorPal.FilterObjects.Tag;
+import GeneratorPal.StructureObjects.AssetPack;
+import GeneratorPal.StructureObjects.Project;
 
 public class Selector extends Actor{
     //Optional Fields

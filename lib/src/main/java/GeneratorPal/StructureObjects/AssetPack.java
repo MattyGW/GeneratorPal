@@ -1,10 +1,10 @@
-package main.StructureObjects;
+package GeneratorPal.StructureObjects;
 
-import main.ActorObjects.Actor;
-import main.FilterObjects.Option;
-import main.FilterObjects.Tag;
-import main.FilterObjects.TagGroup;
-import main.FilterObjects.Variable;
+import GeneratorPal.ActorObjects.Actor;
+import GeneratorPal.FilterObjects.Option;
+import GeneratorPal.FilterObjects.Tag;
+import GeneratorPal.FilterObjects.TagGroup;
+import GeneratorPal.FilterObjects.Variable;
 
 import java.util.HashSet;
 

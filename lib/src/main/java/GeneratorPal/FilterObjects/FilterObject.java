@@ -1,6 +1,6 @@
-package main.FilterObjects;
+package GeneratorPal.FilterObjects;
 
-import main.StructureObjects.AssetPack;
+import GeneratorPal.StructureObjects.AssetPack;
 
 public abstract class FilterObject {
     //required fields

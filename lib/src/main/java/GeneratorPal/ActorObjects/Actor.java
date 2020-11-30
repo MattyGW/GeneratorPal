@@ -1,9 +1,10 @@
-package main.ActorObjects;
+package GeneratorPal.ActorObjects;
 
-import main.StructureObjects.AssetPack;
-import main.StructureObjects.Project;
-import main.FilterObjects.Variable;
 import java.util.HashMap;
+
+import GeneratorPal.FilterObjects.Variable;
+import GeneratorPal.StructureObjects.AssetPack;
+import GeneratorPal.StructureObjects.Project;
 
 public abstract class Actor {
     //required fields

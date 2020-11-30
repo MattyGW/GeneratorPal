@@ -1,7 +1,7 @@
-package GeneratorPalTests.StructureObjectTests;
+package GeneratorPal.StructureObjectTests;
 
-import main.StructureObjects.FrameWork;
-import main.StructureObjects.Project;
+import GeneratorPal.StructureObjects.FrameWork;
+import GeneratorPal.StructureObjects.Project;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

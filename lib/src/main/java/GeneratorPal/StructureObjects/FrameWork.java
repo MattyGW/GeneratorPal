@@ -1,4 +1,4 @@
-package main.StructureObjects;
+package GeneratorPal.StructureObjects;
 
 
 import java.io.File;

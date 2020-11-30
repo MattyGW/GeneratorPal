@@ -3,12 +3,11 @@
  */
 package GeneratorPal;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 public class LibraryTest {
     @Test public void testSomeLibraryMethod() {
-        Library classUnderTest = new Library();
-        assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
+        // Library classUnderTest = new Library();
+        // assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
     }
 }

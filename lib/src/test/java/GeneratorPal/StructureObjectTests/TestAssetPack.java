@@ -1,4 +1,4 @@
-package GeneratorPalTests.StructureObjectTests;
+package GeneratorPal.StructureObjectTests;
 
 import org.junit.jupiter.api.Test;
 

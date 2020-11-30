@@ -1,4 +1,4 @@
-package GeneratorPalTests.ActorObjectTests;
+package GeneratorPal.ActorObjectTests;
 
 public class TestSelector {
 }

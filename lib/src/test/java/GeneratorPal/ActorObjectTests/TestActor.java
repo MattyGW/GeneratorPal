@@ -1,4 +1,4 @@
-package GeneratorPalTests.ActorObjectTests;
+package GeneratorPal.ActorObjectTests;
 
 import org.junit.jupiter.api.Test;
 

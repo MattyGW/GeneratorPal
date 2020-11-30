@@ -1,7 +1,7 @@
-package main.StructureObjects;
+package GeneratorPal.StructureObjects;
 
-import main.ActorObjects.*;
-import main.FilterObjects.*;
+import GeneratorPal.ActorObjects.*;
+import GeneratorPal.FilterObjects.*;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package GeneratorPalTests;
+package GeneratorPal;
 
 public class FilterObjectTestSuite {
 }

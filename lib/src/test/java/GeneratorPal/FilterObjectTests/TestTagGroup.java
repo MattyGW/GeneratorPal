@@ -1,4 +1,4 @@
-package GeneratorPalTests.FilterObjectTests;
+package GeneratorPal.FilterObjectTests;
 
 public class TestTagGroup {
 }

@@ -1,10 +1,11 @@
-package main.ActorObjects;
-
-import javafx.util.Pair;
-import main.StructureObjects.AssetPack;
-import main.StructureObjects.Project;
+package GeneratorPal.ActorObjects;
 
 import java.util.ArrayList;
+
+import org.apache.commons.math3.util.Pair;
+
+import GeneratorPal.StructureObjects.AssetPack;
+import GeneratorPal.StructureObjects.Project;
 
 public class Generator extends Actor{
     //Optional Fields

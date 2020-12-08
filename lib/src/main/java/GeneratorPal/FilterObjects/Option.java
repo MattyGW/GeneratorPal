@@ -18,7 +18,7 @@ public class Option extends FilterObject {
     }
 
     //Primary Methods
-    public boolean isActorOption(){return false;}
+    public Boolean isActorOption(){return null;}
 
     //Secondary Methods
     ///Getters and Setters

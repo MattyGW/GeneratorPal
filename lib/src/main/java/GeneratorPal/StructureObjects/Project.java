@@ -19,7 +19,9 @@ public class Project{
 
     //Constructors
     public Project(String name) {
+        //Required Fields
         this.name = name;
+        //Optional Fields
         this.fileAddress = null;
         this.assetPacks = new HashSet<>();
         this.actors = new HashSet<>();

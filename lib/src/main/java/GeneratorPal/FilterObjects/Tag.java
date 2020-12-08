@@ -13,9 +13,11 @@ public class Tag extends FilterObject {
 
     //Constructor
     public Tag(String name, String description, AssetPack assetPack, TagGroup tagGroup) {
+        //required Fields
         super(name, description, assetPack);
-        this.weight = 0;
         this.tagGroup = tagGroup;
+        //optional Fields
+        this.weight = 0;
         this.variableInteractions = new HashMap<>();
     }
 

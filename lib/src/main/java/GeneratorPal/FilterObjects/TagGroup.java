@@ -11,7 +11,9 @@ public class TagGroup extends FilterObject {
 
     //Constructor
     public TagGroup(String name, String description, AssetPack assetPack) {
+        //required Fields
         super(name, description, assetPack);
+        //optional Fields
         this.tags = new HashSet<>();
         this.requiredTagGroups = new HashSet<>();
     }

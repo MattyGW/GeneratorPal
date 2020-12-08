@@ -12,7 +12,9 @@ public class Option extends FilterObject {
 
     //Constructors
     public Option(String name, String description, AssetPack assetPack) {
+        //required Fields
         super(name, description, assetPack);
+        //optional Fields
         this.tags = new HashSet<>();
         this.actor = null;
     }

@@ -10,6 +10,7 @@ public abstract class FilterObject {
 
     //Constructor
     public FilterObject(String name, String description, AssetPack assetPack) {
+        //required Fields
         this.name = name;
         this.description = description;
         this.assetPack = assetPack;

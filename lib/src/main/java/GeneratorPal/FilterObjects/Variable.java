@@ -10,7 +10,9 @@ public class Variable extends FilterObject {
 
     //Constructor
     public Variable(String name, String description, AssetPack assetPack) {
+        //Required Fields
         super(name, description, assetPack);
+        //Optional Fields
         this.tagInteraction = new HashMap<>();
     }
 

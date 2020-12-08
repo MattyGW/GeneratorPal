@@ -12,7 +12,9 @@ public class Selector extends Actor{
 
     //Constructor
     public Selector(String name, Project project, AssetPack assetPack) {
+        //required Fields
         super(name, project, assetPack);
+        //optional Fields
         this.tagsNWeights = new HashMap<>();
     }
 

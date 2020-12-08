@@ -17,9 +17,11 @@ public abstract class Actor {
 
     //Constructor
     public Actor(String name, Project project, AssetPack assetPack) {
+        //required fields
         this.name = name;
         this.project = project;
         this.assetPack = assetPack;
+        //optional fields
         this.localisedVariables = false;
         this.variables = new HashMap<>();
     }

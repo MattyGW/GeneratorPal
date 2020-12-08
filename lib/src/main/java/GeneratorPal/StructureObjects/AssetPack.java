@@ -20,7 +20,9 @@ public class AssetPack {
 
     //Constructors
     public AssetPack(String name) {
+        //Required Fields
         this.name = name;
+        //Optional Fields
         this.tags = new HashSet<>();
         this.variables = new HashSet<>();
         this.tagGroups = new HashSet<>();

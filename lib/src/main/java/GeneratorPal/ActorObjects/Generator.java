@@ -13,7 +13,9 @@ public class Generator extends Actor{
 
     //Constructor
     public Generator(String name, Project project, AssetPack assetPack) {
+        //required Fields
         super(name, project, assetPack);
+        //optional Fields
         this.stages = new ArrayList<>();
     }
 

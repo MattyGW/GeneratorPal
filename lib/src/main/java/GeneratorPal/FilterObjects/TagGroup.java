@@ -2,7 +2,6 @@ package GeneratorPal.FilterObjects;
 
 import GeneratorPal.StructureObjects.AssetPack;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class TagGroup extends FilterObject {

@@ -1,6 +1,5 @@
 package GeneratorPal.ActorObjects;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import GeneratorPal.FilterObjects.Tag;

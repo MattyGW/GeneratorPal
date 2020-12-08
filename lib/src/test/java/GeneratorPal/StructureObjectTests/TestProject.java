@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestProject {
 
@@ -95,8 +94,9 @@ public class TestProject {
         //Set-up Test Variables
         Project test_Project = FrameWork.createProject("testProject");
         AssetPack test_AssetPack = test_Project.createAssetPack("testAssetPack");
+        TagGroup test_TagGroup = test_Project.createTagGroup("testTagGroup", "testTagGroupDescription", test_AssetPack);
         //Run the test method
-        Object test_Object = test_Project.createTag("testTag", test_AssetPack);
+        Object test_Object = test_Project.createTag("testTag", "testTagDescription", test_AssetPack, test_TagGroup);
         assertAll(
             //Check recorded with pointer in test_Project
             () -> assertEquals(true,test_Project.getTags().contains(test_Object)),
@@ -121,7 +121,7 @@ public class TestProject {
         Project test_Project = FrameWork.createProject("testProject");
         AssetPack test_AssetPack = test_Project.createAssetPack("testAssetPack");
         //Run the test method
-        Object test_Object = test_Project.createVariable("testVariable", test_AssetPack);
+        Object test_Object = test_Project.createVariable("testVariable", "testVariableDescription", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
             () -> assertEquals(true,test_Project.getVariables().contains(test_Object)),
@@ -146,7 +146,7 @@ public class TestProject {
         Project test_Project = FrameWork.createProject("testProject");
         AssetPack test_AssetPack = test_Project.createAssetPack("testAssetPack");
         //Run the test method
-        Object test_Object = test_Project.createTagGroup("testTagGroup", test_AssetPack);
+        Object test_Object = test_Project.createTagGroup("testTagGroup", "testTagGroupDescription", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
             () -> assertEquals(true,test_Project.getTagGroups().contains(test_Object)),
@@ -171,7 +171,7 @@ public class TestProject {
         Project test_Project = FrameWork.createProject("testProject");
         AssetPack test_AssetPack = test_Project.createAssetPack("testAssetPack");
         //Run the test method
-        Object test_Object = test_Project.createOption("testOption", test_AssetPack);
+        Object test_Object = test_Project.createOption("testOption", "testOptionDescription", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
             () -> assertEquals(true,test_Project.getOptions().contains(test_Object)),

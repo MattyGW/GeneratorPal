@@ -19,8 +19,8 @@ public class TestOption {
         Project test_Project = FrameWork.createProject("testProject");
         AssetPack test_AssetPack = test_Project.createAssetPack("testAssetPack");
         Actor test_Actor = test_Project.createGenerator("test_Actor", test_AssetPack);
-        Option test_Option_1 = test_Project.createOption("test_Option_1", test_AssetPack);
-        Option test_Option_2 = test_Project.createOption("test_Option_2", test_AssetPack);
+        Option test_Option_1 = test_Project.createOption("test_Option_1", "test_Description_1", test_AssetPack);
+        Option test_Option_2 = test_Project.createOption("test_Option_2", "test_Description_2", test_AssetPack);
         test_Option_2.setActor(test_Actor);
         //Run tests
         assertAll(

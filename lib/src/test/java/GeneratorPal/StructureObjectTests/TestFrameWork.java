@@ -18,12 +18,14 @@ public class TestFrameWork {
 
     @Test
     public void testCreateProject() {
-        Project project = FrameWork.createProject("TestProjectName");
+        //Set-up Test Variables
+        Project test_Project = FrameWork.createProject("testProject");
+        //Run tests
         assertAll(
-                //Check project is created plus correct name
-                () -> assertEquals("TestProjectName",project.getName()),
-                //Check project recorded in FrameWork
-                () -> assertTrue(FrameWork.getProjects().contains(project))
-         );
+            //Check project is created plus correct name
+            () -> assertEquals("TestProjectName",test_Project.getName()),
+            //Check project recorded in FrameWork
+            () -> assertEquals(true,FrameWork.getProjects().contains(test_Project))
+        );
     }
 }

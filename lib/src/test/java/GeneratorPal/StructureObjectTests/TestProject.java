@@ -12,6 +12,7 @@ import GeneratorPal.StructureObjects.Project;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestProject {
@@ -26,13 +27,13 @@ public class TestProject {
         //Run tests
         assertAll(
             //Check recorded with pointer in test_Project
-            () -> assertTrue(test_Project.getActors().contains(test_Object)),
+            () -> assertEquals(true,test_Project.getActors().contains(test_Object)),
             //Check recorded with pointer in test_AssetPack
-            () -> assertTrue(test_AssetPack.getActors().contains(test_Object)),
+            () -> assertEquals(true,test_AssetPack.getActors().contains(test_Object)),
             //Check correct class
-            () -> assertTrue(test_Object.getClass().equals(Selector.class)),
+            () -> assertEquals(true,test_Object.getClass().equals(Selector.class)),
             //Check name assigned correctly
-            () -> assertTrue(((Selector)test_Object).getName()=="testSelector")
+            () -> assertEquals(true,((Selector)test_Object).getName()=="testSelector")
         );
     }
     
@@ -51,13 +52,13 @@ public class TestProject {
         Object test_Object = test_Project.createGenerator("testGenerator", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
-            () -> assertTrue(test_Project.getActors().contains(test_Object)),
+            () -> assertEquals(true,test_Project.getActors().contains(test_Object)),
             //Check recorded with pointer in test_AssetPack
-            () -> assertTrue(test_AssetPack.getActors().contains(test_Object)),
+            () -> assertEquals(true,test_AssetPack.getActors().contains(test_Object)),
             //Check correct Class
-            () -> assertTrue(test_Object.getClass().equals(Generator.class)),
+            () -> assertEquals(true,test_Object.getClass().equals(Generator.class)),
             //Check name assigned correcrly
-            () -> assertTrue(((Generator)test_Object).getName()=="testGenerator")
+            () -> assertEquals(true,((Generator)test_Object).getName()=="testGenerator")
         );
     }
 
@@ -75,11 +76,11 @@ public class TestProject {
         Object test_Object = test_Project.createAssetPack("testAssetPack");
         assertAll(
             //Check recorded with pointer
-            () -> assertTrue(test_Project.getAssetPacks().contains(test_Object)),
+            () -> assertEquals(true,test_Project.getAssetPacks().contains(test_Object)),
             //Check correct Class
-            () -> assertTrue(test_Object.getClass().equals(AssetPack.class)),
+            () -> assertEquals(true,test_Object.getClass().equals(AssetPack.class)),
             //Check name assigned correcrly
-            () -> assertTrue(((AssetPack)test_Object).getName()=="testAssetPack")
+            () -> assertEquals(true,((AssetPack)test_Object).getName()=="testAssetPack")
         );
     }
 
@@ -98,13 +99,13 @@ public class TestProject {
         Object test_Object = test_Project.createTag("testTag", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
-            () -> assertTrue(test_Project.getTags().contains(test_Object)),
+            () -> assertEquals(true,test_Project.getTags().contains(test_Object)),
             //Check recorded with pointer in test_AssetPack
-            () -> assertTrue(test_AssetPack.getTags().contains(test_Object)),
+            () -> assertEquals(true,test_AssetPack.getTags().contains(test_Object)),
             //Check correct Class
-            () -> assertTrue(test_Object.getClass().equals(Tag.class)),
+            () -> assertEquals(true,test_Object.getClass().equals(Tag.class)),
             //Check name assigned correcrly
-            () -> assertTrue(((Tag)test_Object).getName()=="testTag")
+            () -> assertEquals(true,((Tag)test_Object).getName()=="testTag")
         );
     }
 
@@ -123,13 +124,13 @@ public class TestProject {
         Object test_Object = test_Project.createVariable("testVariable", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
-            () -> assertTrue(test_Project.getVariables().contains(test_Object)),
+            () -> assertEquals(true,test_Project.getVariables().contains(test_Object)),
             //Check recorded with pointer in test_AssetPack
-            () -> assertTrue(test_AssetPack.getVariables().contains(test_Object)),
+            () -> assertEquals(true,test_AssetPack.getVariables().contains(test_Object)),
             //Check correct Class
-            () -> assertTrue(test_Object.getClass().equals(Variable.class)),
+            () -> assertEquals(true,test_Object.getClass().equals(Variable.class)),
             //Check name assigned correcrly
-            () -> assertTrue(((Variable)test_Object).getName()=="testVariable")
+            () -> assertEquals(true,((Variable)test_Object).getName()=="testVariable")
         );
     }
 
@@ -148,13 +149,13 @@ public class TestProject {
         Object test_Object = test_Project.createTagGroup("testTagGroup", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
-            () -> assertTrue(test_Project.getTagGroups().contains(test_Object)),
+            () -> assertEquals(true,test_Project.getTagGroups().contains(test_Object)),
             //Check recorded with pointer in test_AssetPack
-            () -> assertTrue(test_AssetPack.getTagGroups().contains(test_Object)),
+            () -> assertEquals(true,test_AssetPack.getTagGroups().contains(test_Object)),
             //Check correct Class
-            () -> assertTrue(test_Object.getClass().equals(TagGroup.class)),
+            () -> assertEquals(true,test_Object.getClass().equals(TagGroup.class)),
             //Check name assigned correcrly
-            () -> assertTrue(((TagGroup)test_Object).getName()=="testTagGroup")
+            () -> assertEquals(true,((TagGroup)test_Object).getName()=="testTagGroup")
         );
     }
 
@@ -173,13 +174,13 @@ public class TestProject {
         Object test_Object = test_Project.createOption("testOption", test_AssetPack);
         assertAll(
             //Check recorded with pointer in test_Project
-            () -> assertTrue(test_Project.getOptions().contains(test_Object)),
+            () -> assertEquals(true,test_Project.getOptions().contains(test_Object)),
             //Check recorded with pointer in test_AssetPack
-            () -> assertTrue(test_AssetPack.getOptions().contains(test_Object)),
+            () -> assertEquals(true,test_AssetPack.getOptions().contains(test_Object)),
             //Check correct Class
-            () -> assertTrue(test_Object.getClass().equals(Option.class)),
+            () -> assertEquals(true,test_Object.getClass().equals(Option.class)),
             //Check name assigned correcrly
-            () -> assertTrue(((Option)test_Object).getName()=="testOption")
+            () -> assertEquals(true,((Option)test_Object).getName()=="testOption")
         );
     }
 

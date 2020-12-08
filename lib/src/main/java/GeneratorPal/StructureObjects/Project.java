@@ -3,10 +3,7 @@ package GeneratorPal.StructureObjects;
 import GeneratorPal.ActorObjects.*;
 import GeneratorPal.FilterObjects.*;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 
 public class Project{
     //Required Fields
@@ -32,29 +29,59 @@ public class Project{
         this.variables = new HashSet<>();
     }
 
-    //Primary Methods
-    public Actor createSelector(String name, AssetPack assetPack){return null;}
-    public Actor importSelector(){return null;}
+    //First Pass Methods
+    public Selector createSelector(String name, AssetPack assetPack){
+        Actor actor = new Selector(name, this, assetPack);
+        this.actors.add(actor);
+        return (Selector) actor;
+    }
+    
+    public Generator createGenerator(String name, AssetPack assetPack){
+        Actor actor = new Generator(name, this, assetPack);
+        this.actors.add(actor);
+        return (Generator) actor;
+    }
+    
+    public AssetPack createAssetPack(String name){
+        AssetPack assetPack = new AssetPack(name);
+        this.assetPacks.add(assetPack);
+        return (AssetPack) assetPack;
+    }
+    
 
-    public Actor createGenerator(){return null;}
-    public Actor importGenerator(){return null;}
+    public Tag createTag(String name, String description, AssetPack assetPack, TagGroup tagGroup){
+        Tag tag = new Tag(name, description, assetPack, tagGroup);
+        this.tags.add(tag);
+        return (Tag) tag;
+    }
 
-    public AssetPack createAssetPack(String name){return null;}
-    public AssetPack importAssetPack(){return null;}
+    public Variable createVariable(String name, String description, AssetPack assetPack){
+        Variable variable = new Variable(name, description, assetPack);
+        this.variables.add(variable);
+        return (Variable) variable;
+    }
 
-    public Tag createTag(){return null;}
-    public Tag importTag(){return null;}
+    public TagGroup createTagGroup(String name, String description, AssetPack assetPack){
+        TagGroup tagGroup = new TagGroup(name, description, assetPack);
+        this.tagGroups.add(tagGroup);
+        return (TagGroup) tagGroup;
+    }    
 
-    public Variable createVariable(){return null;}
-    public Variable importVariable(){return null;}
+    public Option createOption(String name, String description, AssetPack assetPack){
+        Option option = new Option(name, description, assetPack);
+        this.options.add(option);
+        return (Option) option;
+    }
 
-    public TagGroup createTagGroup(){return null;}
-    public TagGroup importTagGroup(){return null;}
+    //Second Pass Methods
+    public Option importOption(String[] importData){return null;}
+    public TagGroup importTagGroup(String[] importData){return null;}
+    public Variable importVariable(String[] importData){return null;}
+    public Tag importTag(String[] importData){return null;}
+    public AssetPack importAssetPack(String[] importData){return null;}
+    public Generator importGenerator(String[] importData){return null;}
+    public Selector importSelector(String[] importData){return null;}
 
-    public Option createOption(){return null;}
-    public Option importOption(){return null;}
-
-    //Secondary Methods
     ///Getters & Setters
     public String getName() {
         return name;

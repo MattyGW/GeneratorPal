@@ -9,7 +9,12 @@ public class FrameWork {
     private static ArrayList<Project> projects;
 
     //Primary Methods
-    public static Project createProject(String name) {return null;}
+    public static Project createProject(String name) {
+        Project project = new Project(name);
+        projects.add(project);
+        return project;
+    }
+
     public static Project importProject(File file) {return null;}
 
     //Secondary Methods
